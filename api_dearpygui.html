@@ -4081,12 +4081,12 @@ def add_node_editor(*, label: str =None, id: int =0, width: int =0, height: int 
 
         return internal_dpg.add_node_editor(label=label, id=id, width=width, height=height, parent=parent, before=before, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, filter_key=filter_key, delay_search=delay_search, tracked=tracked, track_offset=track_offset, user_data=user_data, delink_callback=delink_callback, menubar=menubar)
 
-def add_node_link(node_1 : int, node_2 : int, *, label: str =None, id: int =0, parent: int =0, show: bool =True, user_data: Any =None) -&gt; int:
+def add_node_link(attr_1 : int, attr_2 : int, *, label: str =None, id: int =0, parent: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a node link between nodes.
         Args:
-                node_1 (int): 
-                node_2 (int): 
+                attr_1 (int): 
+                attr_2 (int): 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **parent (int): Parent to add this item to. (runtime adding)
@@ -4096,7 +4096,7 @@ def add_node_link(node_1 : int, node_2 : int, *, label: str =None, id: int =0, p
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_node_link(node_1, node_2, label=label, id=id, parent=parent, show=show, user_data=user_data)
+        return internal_dpg.add_node_link(attr_1, attr_2, label=label, id=id, parent=parent, show=show, user_data=user_data)
 
 def add_pie_series(x : float, y : float, radius : float, values : List[float], labels : List[str], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, format: str =&#39;%0.2f&#39;, angle: float =90.0, normalize: bool =False) -&gt; int:
         &#34;&#34;&#34;
@@ -12886,15 +12886,15 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_node_link"><code class="name flex">
-<span>def <span class="ident">add_node_link</span></span>(<span>node_1: int, node_2: int, *, label: str = None, id: int = 0, parent: int = 0, show: bool = True, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_node_link</span></span>(<span>attr_1: int, attr_2: int, *, label: str = None, id: int = 0, parent: int = 0, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a node link between nodes.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>node_1</code></strong> :&ensp;<code>int</code></dt>
+<dt><strong><code>attr_1</code></strong> :&ensp;<code>int</code></dt>
 <dd>&nbsp;</dd>
-<dt><strong><code>node_2</code></strong> :&ensp;<code>int</code></dt>
+<dt><strong><code>attr_2</code></strong> :&ensp;<code>int</code></dt>
 <dd>&nbsp;</dd>
 <dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
 <dd>Overrides 'name' as label.</dd>
@@ -12913,12 +12913,12 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_node_link(node_1 : int, node_2 : int, *, label: str =None, id: int =0, parent: int =0, show: bool =True, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_node_link(attr_1 : int, attr_2 : int, *, label: str =None, id: int =0, parent: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a node link between nodes.
         Args:
-                node_1 (int): 
-                node_2 (int): 
+                attr_1 (int): 
+                attr_2 (int): 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **parent (int): Parent to add this item to. (runtime adding)
@@ -12928,7 +12928,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_node_link(node_1, node_2, label=label, id=id, parent=parent, show=show, user_data=user_data)</code></pre>
+        return internal_dpg.add_node_link(attr_1, attr_2, label=label, id=id, parent=parent, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_pie_series"><code class="name flex">
