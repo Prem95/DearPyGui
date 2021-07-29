@@ -685,6 +685,33 @@ def is_item_clicked(item: int) -&gt; Union[bool, None]:
     return internal_dpg.get_item_state(item)[&#34;clicked&#34;]
 
 
+def is_item_left_clicked(item: int) -&gt; Union[bool, None]:
+    &#34;&#34;&#34;Checks if item is left clicked.
+
+    Returns:
+        status as a bool
+    &#34;&#34;&#34;
+    return internal_dpg.get_item_state(item)[&#34;left_clicked&#34;]
+
+
+def is_item_right_clicked(item: int) -&gt; Union[bool, None]:
+    &#34;&#34;&#34;Checks if item is right clicked.
+
+    Returns:
+        status as a bool
+    &#34;&#34;&#34;
+    return internal_dpg.get_item_state(item)[&#34;right_clicked&#34;]
+
+
+def is_item_middle_clicked(item: int) -&gt; Union[bool, None]:
+    &#34;&#34;&#34;Checks if item is middle clicked.
+
+    Returns:
+        status as a bool
+    &#34;&#34;&#34;
+    return internal_dpg.get_item_state(item)[&#34;middle_clicked&#34;]
+
+
 def is_item_visible(item: int) -&gt; Union[bool, None]:
     &#34;&#34;&#34;Checks if item is visible.
 
@@ -955,6 +982,7 @@ def set_viewport_caption(value: bool):
     Returns:
         None
     &#34;&#34;&#34;
+    internal_dpg.configure_viewport(0, border=value)
     internal_dpg.configure_viewport(0, caption=value)
 
 
@@ -2060,7 +2088,7 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 # Core Wrappings
 ##########################################################
 
-def add_2d_histogram_series(x : List[float], y : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, xbins: int =-1, ybins: int =-1, xmin_range: float =0.0, xmax_range: float =1.0, ymin_range: float =0.0, ymax_range: float =1.0, density: bool =False, outliers: bool =True) -&gt; int:
+def add_2d_histogra_series(x : List[float], y : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, xbins: int =-1, ybins: int =-1, xmin_range: float =0.0, xmax_range: float =1.0, ymin_range: float =0.0, ymax_range: float =1.0, density: bool =False, outliers: bool =True) -&gt; int:
         &#34;&#34;&#34;
         Undocumented function
         Args:
@@ -2085,7 +2113,7 @@ def add_2d_histogram_series(x : List[float], y : List[float], *, label: str =Non
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_2d_histogram_series(x, y, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, xbins=xbins, ybins=ybins, xmin_range=xmin_range, xmax_range=xmax_range, ymin_range=ymin_range, ymax_range=ymax_range, density=density, outliers=outliers)
+        return internal_dpg.add_2d_histogra_series(x, y, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, xbins=xbins, ybins=ybins, xmin_range=xmin_range, xmax_range=xmax_range, ymin_range=ymin_range, ymax_range=ymax_range, density=density, outliers=outliers)
 
 def add_3d_slider(*, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, source: int =0, payload_type: str =&#39;$$DPG_PAYLOAD&#39;, callback: Callable =None, drag_callback: Callable =None, drop_callback: Callable =None, show: bool =True, pos: List[int] =[], filter_key: str =&#39;&#39;, tracked: bool =False, track_offset: float =0.5, user_data: Any =None, default_value: List[float] =(0.0, 0.0, 0.0, 0.0), max_x: float =100.0, max_y: float =100.0, max_z: float =100.0, min_x: float =0.0, min_y: float =0.0, min_z: float =0.0, scale: float =1.0) -&gt; int:
         &#34;&#34;&#34;
@@ -2123,7 +2151,7 @@ def add_3d_slider(*, label: str =None, id: int =0, width: int =0, height: int =0
 
         return internal_dpg.add_3d_slider(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, source=source, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, tracked=tracked, track_offset=track_offset, user_data=user_data, default_value=default_value, max_x=max_x, max_y=max_y, max_z=max_z, min_x=min_x, min_y=min_y, min_z=min_z, scale=scale)
 
-def add_activated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_activated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is activated.
         Args:
@@ -2131,14 +2159,15 @@ def add_activated_handler(parent : int, *, label: str =None, id: int =0, callbac
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_activated_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_activated_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
-def add_active_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_active_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is active.
         Args:
@@ -2146,12 +2175,13 @@ def add_active_handler(parent : int, *, label: str =None, id: int =0, callback: 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_active_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_active_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_area_series(x : List[float], y : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, fill: List[int] =(0, 0, 0, -255), contribute_to_bounds: bool =True) -&gt; int:
         &#34;&#34;&#34;
@@ -2345,7 +2375,7 @@ def add_child(*, label: str =None, id: int =0, width: int =0, height: int =0, in
 
         return internal_dpg.add_child(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, payload_type=payload_type, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, delay_search=delay_search, tracked=tracked, track_offset=track_offset, user_data=user_data, border=border, autosize_x=autosize_x, autosize_y=autosize_y, no_scrollbar=no_scrollbar, horizontal_scrollbar=horizontal_scrollbar, menubar=menubar)
 
-def add_clicked_handler(parent : int, button : int =-1, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_clicked_handler(parent : int, button : int =-1, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is clicked.
         Args:
@@ -2354,12 +2384,13 @@ def add_clicked_handler(parent : int, button : int =-1, *, label: str =None, id:
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_clicked_handler(parent, button, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_clicked_handler(parent, button, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_clipper(*, label: str =None, id: int =0, width: int =0, indent: int =-1, parent: int =0, before: int =0, show: bool =True, delay_search: bool =False, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
@@ -2631,7 +2662,7 @@ def add_date_picker(*, label: str =None, id: int =0, indent: int =-1, parent: in
 
         return internal_dpg.add_date_picker(label=label, id=id, indent=indent, parent=parent, before=before, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, tracked=tracked, track_offset=track_offset, user_data=user_data, default_value=default_value, level=level)
 
-def add_deactivated_after_edit_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_deactivated_after_edit_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is deactivated after edit.
         Args:
@@ -2639,14 +2670,15 @@ def add_deactivated_after_edit_handler(parent : int, *, label: str =None, id: in
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_deactivated_after_edit_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_deactivated_after_edit_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
-def add_deactivated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_deactivated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is deactivated.
         Args:
@@ -2654,12 +2686,13 @@ def add_deactivated_handler(parent : int, *, label: str =None, id: int =0, callb
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_deactivated_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_deactivated_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_double4_value(*, label: str =None, id: int =0, source: int =0, user_data: Any =None, default_value: Any =(0.0, 0.0, 0.0, 0.0), parent: int =internal_dpg.mvReservedUUID_3) -&gt; int:
         &#34;&#34;&#34;
@@ -2977,7 +3010,7 @@ def add_dynamic_texture(width : int, height : int, default_value : List[float], 
 
         return internal_dpg.add_dynamic_texture(width, height, default_value, label=label, id=id, user_data=user_data, parent=parent)
 
-def add_edited_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_edited_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is edited.
         Args:
@@ -2985,12 +3018,13 @@ def add_edited_handler(parent : int, *, label: str =None, id: int =0, callback: 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_edited_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_edited_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_error_series(x : List[float], y : List[float], negative : List[float], positive : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, contribute_to_bounds: bool =True, horizontal: bool =False) -&gt; int:
         &#34;&#34;&#34;
@@ -3124,7 +3158,7 @@ def add_float_vect_value(*, label: str =None, id: int =0, source: int =0, user_d
 
         return internal_dpg.add_float_vect_value(label=label, id=id, source=source, user_data=user_data, default_value=default_value, parent=parent)
 
-def add_focus_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_focus_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is focused.
         Args:
@@ -3132,12 +3166,13 @@ def add_focus_handler(parent : int, *, label: str =None, id: int =0, callback: C
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_focus_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_focus_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_font(file : str, size : int, *, label: str =None, id: int =0, user_data: Any =None, default_font: bool =False, parent: int =internal_dpg.mvReservedUUID_0) -&gt; int:
         &#34;&#34;&#34;
@@ -3284,7 +3319,7 @@ def add_heat_series(x : List[float], rows : int, cols : int, *, label: str =None
 
         return internal_dpg.add_heat_series(x, rows, cols, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, scale_min=scale_min, scale_max=scale_max, bounds_min=bounds_min, bounds_max=bounds_max, format=format, contribute_to_bounds=contribute_to_bounds)
 
-def add_histogram_series(x : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, bins: int =-1, bar_scale: float =1.0, min_range: float =0.0, max_range: float =1.0, cumlative: bool =False, density: bool =False, outliers: bool =True, contribute_to_bounds: bool =True) -&gt; int:
+def add_histogra_series(x : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, bins: int =-1, bar_scale: float =1.0, min_range: float =0.0, max_range: float =1.0, cumlative: bool =False, density: bool =False, outliers: bool =True, contribute_to_bounds: bool =True) -&gt; int:
         &#34;&#34;&#34;
         Adds a histogram series to a plot.
         Args:
@@ -3308,7 +3343,7 @@ def add_histogram_series(x : List[float], *, label: str =None, id: int =0, paren
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_histogram_series(x, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, bins=bins, bar_scale=bar_scale, min_range=min_range, max_range=max_range, cumlative=cumlative, density=density, outliers=outliers, contribute_to_bounds=contribute_to_bounds)
+        return internal_dpg.add_histogra_series(x, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, bins=bins, bar_scale=bar_scale, min_range=min_range, max_range=max_range, cumlative=cumlative, density=density, outliers=outliers, contribute_to_bounds=contribute_to_bounds)
 
 def add_hline_series(x : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, contribute_to_bounds: bool =True) -&gt; int:
         &#34;&#34;&#34;
@@ -3329,7 +3364,7 @@ def add_hline_series(x : List[float], *, label: str =None, id: int =0, parent: i
 
         return internal_dpg.add_hline_series(x, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, contribute_to_bounds=contribute_to_bounds)
 
-def add_hover_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_hover_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is hovered.
         Args:
@@ -3337,12 +3372,13 @@ def add_hover_handler(parent : int, *, label: str =None, id: int =0, callback: C
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_hover_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_hover_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_image(texture_id : int, *, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, source: int =0, payload_type: str =&#39;$$DPG_PAYLOAD&#39;, drag_callback: Callable =None, drop_callback: Callable =None, show: bool =True, pos: List[int] =[], filter_key: str =&#39;&#39;, tracked: bool =False, track_offset: float =0.5, user_data: Any =None, tint_color: List[float] =(255, 255, 255, 255), border_color: List[float] =(0, 0, 0, 0), uv_min: List[float] =(0.0, 0.0), uv_max: List[float] =(1.0, 1.0)) -&gt; int:
         &#34;&#34;&#34;
@@ -4319,7 +4355,7 @@ def add_raw_texture(width : int, height : int, default_value : List[float], *, l
 
         return internal_dpg.add_raw_texture(width, height, default_value, label=label, id=id, user_data=user_data, format=format, parent=parent)
 
-def add_resize_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_resize_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is resized.
         Args:
@@ -4327,12 +4363,13 @@ def add_resize_handler(parent : int, *, label: str =None, id: int =0, callback: 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_resize_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_resize_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_same_line(*, label: str =None, id: int =0, parent: int =0, before: int =0, show: bool =True, user_data: Any =None, xoffset: float =0.0, spacing: float =-1.0) -&gt; int:
         &#34;&#34;&#34;
@@ -5113,7 +5150,7 @@ def add_time_picker(*, label: str =None, id: int =0, indent: int =-1, parent: in
 
         return internal_dpg.add_time_picker(label=label, id=id, indent=indent, parent=parent, before=before, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, tracked=tracked, track_offset=track_offset, user_data=user_data, default_value=default_value, hour24=hour24)
 
-def add_toggled_open_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_toggled_open_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is toggled open.
         Args:
@@ -5121,12 +5158,13 @@ def add_toggled_open_handler(parent : int, *, label: str =None, id: int =0, call
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_toggled_open_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_toggled_open_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_tooltip(parent : str, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
@@ -5221,7 +5259,7 @@ def add_viewport_menu_bar(*, label: str =None, id: int =0, indent: int =-1, pare
 
         return internal_dpg.add_viewport_menu_bar(label=label, id=id, indent=indent, parent=parent, show=show, delay_search=delay_search, user_data=user_data)
 
-def add_visible_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+def add_visible_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is visible.
         Args:
@@ -5229,12 +5267,13 @@ def add_visible_handler(parent : int, *, label: str =None, id: int =0, callback:
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_visible_handler(parent, label=label, id=id, callback=callback, user_data=user_data)
+        return internal_dpg.add_visible_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
 def add_vline_series(x : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
@@ -7257,8 +7296,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="dearpygui.dearpygui.add_2d_histogram_series"><code class="name flex">
-<span>def <span class="ident">add_2d_histogram_series</span></span>(<span>x: List[float], y: List[float], *, label: str = None, id: int = 0, parent: int = 0, before: int = 0, source: int = 0, show: bool = True, user_data: Any = None, xbins: int = -1, ybins: int = -1, xmin_range: float = 0.0, xmax_range: float = 1.0, ymin_range: float = 0.0, ymax_range: float = 1.0, density: bool = False, outliers: bool = True) ‑> int</span>
+<dt id="dearpygui.dearpygui.add_2d_histogra_series"><code class="name flex">
+<span>def <span class="ident">add_2d_histogra_series</span></span>(<span>x: List[float], y: List[float], *, label: str = None, id: int = 0, parent: int = 0, before: int = 0, source: int = 0, show: bool = True, user_data: Any = None, xbins: int = -1, ybins: int = -1, xmin_range: float = 0.0, xmax_range: float = 1.0, ymin_range: float = 0.0, ymax_range: float = 1.0, density: bool = False, outliers: bool = True) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Undocumented function</p>
@@ -7305,7 +7344,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_2d_histogram_series(x : List[float], y : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, xbins: int =-1, ybins: int =-1, xmin_range: float =0.0, xmax_range: float =1.0, ymin_range: float =0.0, ymax_range: float =1.0, density: bool =False, outliers: bool =True) -&gt; int:
+<pre><code class="python">def add_2d_histogra_series(x : List[float], y : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, xbins: int =-1, ybins: int =-1, xmin_range: float =0.0, xmax_range: float =1.0, ymin_range: float =0.0, ymax_range: float =1.0, density: bool =False, outliers: bool =True) -&gt; int:
         &#34;&#34;&#34;
         Undocumented function
         Args:
@@ -7330,7 +7369,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_2d_histogram_series(x, y, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, xbins=xbins, ybins=ybins, xmin_range=xmin_range, xmax_range=xmax_range, ymin_range=ymin_range, ymax_range=ymax_range, density=density, outliers=outliers)</code></pre>
+        return internal_dpg.add_2d_histogra_series(x, y, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, xbins=xbins, ybins=ybins, xmin_range=xmin_range, xmax_range=xmax_range, ymin_range=ymin_range, ymax_range=ymax_range, density=density, outliers=outliers)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_3d_slider"><code class="name flex">
@@ -7437,7 +7476,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_activated_handler"><code class="name flex">
-<span>def <span class="ident">add_activated_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_activated_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is activated.</p>
@@ -7451,6 +7490,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -7460,7 +7501,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_activated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_activated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is activated.
         Args:
@@ -7468,16 +7509,17 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_activated_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_activated_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_active_handler"><code class="name flex">
-<span>def <span class="ident">add_active_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_active_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is active.</p>
@@ -7491,6 +7533,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -7500,7 +7544,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_active_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_active_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is active.
         Args:
@@ -7508,12 +7552,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_active_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_active_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_area_series"><code class="name flex">
@@ -8053,7 +8098,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_clicked_handler"><code class="name flex">
-<span>def <span class="ident">add_clicked_handler</span></span>(<span>parent: int, button: int = -1, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_clicked_handler</span></span>(<span>parent: int, button: int = -1, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is clicked.</p>
@@ -8069,6 +8114,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -8078,7 +8125,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_clicked_handler(parent : int, button : int =-1, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_clicked_handler(parent : int, button : int =-1, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is clicked.
         Args:
@@ -8087,12 +8134,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_clicked_handler(parent, button, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_clicked_handler(parent, button, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_clipper"><code class="name flex">
@@ -8861,7 +8909,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_deactivated_after_edit_handler"><code class="name flex">
-<span>def <span class="ident">add_deactivated_after_edit_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_deactivated_after_edit_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is deactivated after edit.</p>
@@ -8875,6 +8923,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -8884,7 +8934,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_deactivated_after_edit_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_deactivated_after_edit_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is deactivated after edit.
         Args:
@@ -8892,16 +8942,17 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_deactivated_after_edit_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_deactivated_after_edit_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_deactivated_handler"><code class="name flex">
-<span>def <span class="ident">add_deactivated_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_deactivated_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is deactivated.</p>
@@ -8915,6 +8966,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -8924,7 +8977,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_deactivated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_deactivated_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is deactivated.
         Args:
@@ -8932,12 +8985,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_deactivated_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_deactivated_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_double4_value"><code class="name flex">
@@ -9824,7 +9878,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_edited_handler"><code class="name flex">
-<span>def <span class="ident">add_edited_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_edited_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is edited.</p>
@@ -9838,6 +9892,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -9847,7 +9903,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_edited_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_edited_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is edited.
         Args:
@@ -9855,12 +9911,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_edited_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_edited_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_error_series"><code class="name flex">
@@ -10225,7 +10282,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_focus_handler"><code class="name flex">
-<span>def <span class="ident">add_focus_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_focus_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is focused.</p>
@@ -10239,6 +10296,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -10248,7 +10307,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_focus_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_focus_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is focused.
         Args:
@@ -10256,12 +10315,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_focus_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_focus_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_font"><code class="name flex">
@@ -10659,8 +10719,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
         return internal_dpg.add_heat_series(x, rows, cols, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, scale_min=scale_min, scale_max=scale_max, bounds_min=bounds_min, bounds_max=bounds_max, format=format, contribute_to_bounds=contribute_to_bounds)</code></pre>
 </details>
 </dd>
-<dt id="dearpygui.dearpygui.add_histogram_series"><code class="name flex">
-<span>def <span class="ident">add_histogram_series</span></span>(<span>x: List[float], *, label: str = None, id: int = 0, parent: int = 0, before: int = 0, source: int = 0, show: bool = True, user_data: Any = None, bins: int = -1, bar_scale: float = 1.0, min_range: float = 0.0, max_range: float = 1.0, cumlative: bool = False, density: bool = False, outliers: bool = True, contribute_to_bounds: bool = True) ‑> int</span>
+<dt id="dearpygui.dearpygui.add_histogra_series"><code class="name flex">
+<span>def <span class="ident">add_histogra_series</span></span>(<span>x: List[float], *, label: str = None, id: int = 0, parent: int = 0, before: int = 0, source: int = 0, show: bool = True, user_data: Any = None, bins: int = -1, bar_scale: float = 1.0, min_range: float = 0.0, max_range: float = 1.0, cumlative: bool = False, density: bool = False, outliers: bool = True, contribute_to_bounds: bool = True) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a histogram series to a plot.</p>
@@ -10705,7 +10765,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_histogram_series(x : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, bins: int =-1, bar_scale: float =1.0, min_range: float =0.0, max_range: float =1.0, cumlative: bool =False, density: bool =False, outliers: bool =True, contribute_to_bounds: bool =True) -&gt; int:
+<pre><code class="python">def add_histogra_series(x : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, source: int =0, show: bool =True, user_data: Any =None, bins: int =-1, bar_scale: float =1.0, min_range: float =0.0, max_range: float =1.0, cumlative: bool =False, density: bool =False, outliers: bool =True, contribute_to_bounds: bool =True) -&gt; int:
         &#34;&#34;&#34;
         Adds a histogram series to a plot.
         Args:
@@ -10729,7 +10789,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_histogram_series(x, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, bins=bins, bar_scale=bar_scale, min_range=min_range, max_range=max_range, cumlative=cumlative, density=density, outliers=outliers, contribute_to_bounds=contribute_to_bounds)</code></pre>
+        return internal_dpg.add_histogra_series(x, label=label, id=id, parent=parent, before=before, source=source, show=show, user_data=user_data, bins=bins, bar_scale=bar_scale, min_range=min_range, max_range=max_range, cumlative=cumlative, density=density, outliers=outliers, contribute_to_bounds=contribute_to_bounds)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_hline_series"><code class="name flex">
@@ -10785,7 +10845,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_hover_handler"><code class="name flex">
-<span>def <span class="ident">add_hover_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_hover_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is hovered.</p>
@@ -10799,6 +10859,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -10808,7 +10870,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_hover_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_hover_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is hovered.
         Args:
@@ -10816,12 +10878,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_hover_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_hover_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_image"><code class="name flex">
@@ -13555,7 +13618,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_resize_handler"><code class="name flex">
-<span>def <span class="ident">add_resize_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_resize_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is resized.</p>
@@ -13569,6 +13632,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -13578,7 +13643,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_resize_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_resize_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is resized.
         Args:
@@ -13586,12 +13651,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_resize_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_resize_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_same_line"><code class="name flex">
@@ -15772,7 +15838,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_toggled_open_handler"><code class="name flex">
-<span>def <span class="ident">add_toggled_open_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_toggled_open_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is toggled open.</p>
@@ -15786,6 +15852,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -15795,7 +15863,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_toggled_open_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_toggled_open_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is toggled open.
         Args:
@@ -15803,12 +15871,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_toggled_open_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_toggled_open_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_tooltip"><code class="name flex">
@@ -16066,7 +16135,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_visible_handler"><code class="name flex">
-<span>def <span class="ident">add_visible_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_visible_handler</span></span>(<span>parent: int, *, label: str = None, id: int = 0, callback: Callable = None, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a handler which runs a given callback when the specified item is visible.</p>
@@ -16080,6 +16149,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
 <dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
 <dd>Registers a callback.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
 <dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
 <dd>User data for callbacks.</dd>
 </dl>
@@ -16089,7 +16160,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_visible_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_visible_handler(parent : int, *, label: str =None, id: int =0, callback: Callable =None, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds a handler which runs a given callback when the specified item is visible.
         Args:
@@ -16097,12 +16168,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **callback (Callable): Registers a callback.
+                **show (bool): Attempt to render widget.
                 **user_data (Any): User data for callbacks.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_visible_handler(parent, label=label, id=id, callback=callback, user_data=user_data)</code></pre>
+        return internal_dpg.add_visible_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_vline_series"><code class="name flex">
@@ -19931,6 +20003,46 @@ Args:</p>
     return internal_dpg.get_item_state(item)[&#34;hovered&#34;]</code></pre>
 </details>
 </dd>
+<dt id="dearpygui.dearpygui.is_item_left_clicked"><code class="name flex">
+<span>def <span class="ident">is_item_left_clicked</span></span>(<span>item: int) ‑> Optional[bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if item is left clicked.</p>
+<h2 id="returns">Returns</h2>
+<p>status as a bool</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_item_left_clicked(item: int) -&gt; Union[bool, None]:
+    &#34;&#34;&#34;Checks if item is left clicked.
+
+    Returns:
+        status as a bool
+    &#34;&#34;&#34;
+    return internal_dpg.get_item_state(item)[&#34;left_clicked&#34;]</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.is_item_middle_clicked"><code class="name flex">
+<span>def <span class="ident">is_item_middle_clicked</span></span>(<span>item: int) ‑> Optional[bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if item is middle clicked.</p>
+<h2 id="returns">Returns</h2>
+<p>status as a bool</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_item_middle_clicked(item: int) -&gt; Union[bool, None]:
+    &#34;&#34;&#34;Checks if item is middle clicked.
+
+    Returns:
+        status as a bool
+    &#34;&#34;&#34;
+    return internal_dpg.get_item_state(item)[&#34;middle_clicked&#34;]</code></pre>
+</details>
+</dd>
 <dt id="dearpygui.dearpygui.is_item_ok"><code class="name flex">
 <span>def <span class="ident">is_item_ok</span></span>(<span>item: int) ‑> Optional[bool]</span>
 </code></dt>
@@ -19949,6 +20061,26 @@ Args:</p>
         status as a bool
     &#34;&#34;&#34;
     return internal_dpg.get_item_state(item)[&#34;ok&#34;]</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.is_item_right_clicked"><code class="name flex">
+<span>def <span class="ident">is_item_right_clicked</span></span>(<span>item: int) ‑> Optional[bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if item is right clicked.</p>
+<h2 id="returns">Returns</h2>
+<p>status as a bool</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_item_right_clicked(item: int) -&gt; Union[bool, None]:
+    &#34;&#34;&#34;Checks if item is right clicked.
+
+    Returns:
+        status as a bool
+    &#34;&#34;&#34;
+    return internal_dpg.get_item_state(item)[&#34;right_clicked&#34;]</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.is_item_search_delayed"><code class="name flex">
@@ -22444,6 +22576,7 @@ Args:</p>
     Returns:
         None
     &#34;&#34;&#34;
+    internal_dpg.configure_viewport(0, border=value)
     internal_dpg.configure_viewport(0, caption=value)</code></pre>
 </details>
 </dd>
@@ -24480,7 +24613,7 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="dearpygui.dearpygui.add_2d_histogram_series" href="#dearpygui.dearpygui.add_2d_histogram_series">add_2d_histogram_series</a></code></li>
+<li><code><a title="dearpygui.dearpygui.add_2d_histogra_series" href="#dearpygui.dearpygui.add_2d_histogra_series">add_2d_histogra_series</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_3d_slider" href="#dearpygui.dearpygui.add_3d_slider">add_3d_slider</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_activated_handler" href="#dearpygui.dearpygui.add_activated_handler">add_activated_handler</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_active_handler" href="#dearpygui.dearpygui.add_active_handler">add_active_handler</a></code></li>
@@ -24534,7 +24667,7 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.add_group" href="#dearpygui.dearpygui.add_group">add_group</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_handler_registry" href="#dearpygui.dearpygui.add_handler_registry">add_handler_registry</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_heat_series" href="#dearpygui.dearpygui.add_heat_series">add_heat_series</a></code></li>
-<li><code><a title="dearpygui.dearpygui.add_histogram_series" href="#dearpygui.dearpygui.add_histogram_series">add_histogram_series</a></code></li>
+<li><code><a title="dearpygui.dearpygui.add_histogra_series" href="#dearpygui.dearpygui.add_histogra_series">add_histogra_series</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_hline_series" href="#dearpygui.dearpygui.add_hline_series">add_hline_series</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_hover_handler" href="#dearpygui.dearpygui.add_hover_handler">add_hover_handler</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_image" href="#dearpygui.dearpygui.add_image">add_image</a></code></li>
@@ -24733,7 +24866,10 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.is_item_enabled" href="#dearpygui.dearpygui.is_item_enabled">is_item_enabled</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_item_focused" href="#dearpygui.dearpygui.is_item_focused">is_item_focused</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_item_hovered" href="#dearpygui.dearpygui.is_item_hovered">is_item_hovered</a></code></li>
+<li><code><a title="dearpygui.dearpygui.is_item_left_clicked" href="#dearpygui.dearpygui.is_item_left_clicked">is_item_left_clicked</a></code></li>
+<li><code><a title="dearpygui.dearpygui.is_item_middle_clicked" href="#dearpygui.dearpygui.is_item_middle_clicked">is_item_middle_clicked</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_item_ok" href="#dearpygui.dearpygui.is_item_ok">is_item_ok</a></code></li>
+<li><code><a title="dearpygui.dearpygui.is_item_right_clicked" href="#dearpygui.dearpygui.is_item_right_clicked">is_item_right_clicked</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_item_search_delayed" href="#dearpygui.dearpygui.is_item_search_delayed">is_item_search_delayed</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_item_shown" href="#dearpygui.dearpygui.is_item_shown">is_item_shown</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_item_toggled_open" href="#dearpygui.dearpygui.is_item_toggled_open">is_item_toggled_open</a></code></li>
