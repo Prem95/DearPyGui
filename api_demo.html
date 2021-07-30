@@ -1191,9 +1191,10 @@ def show_demo():
 
                 with dpg.file_dialog(label=&#34;Demo File Dialog&#34;, show=False, callback=lambda s, a, u : print(s, a, u)):
                     dpg.add_file_extension(&#34;.*&#34;, color=(255, 255, 255, 255))
+                    dpg.add_file_extension(&#34;Source files (*.cpp *.h *.hpp){.cpp,.h,.hpp}&#34;, color=(0, 255, 255, 255))
                     dpg.add_file_extension(&#34;.cpp&#34;, color=(255, 255, 0, 255))
-                    dpg.add_file_extension(&#34;.h&#34;, color=(255, 0, 255, 255))
-                    dpg.add_file_extension(&#34;.py&#34;, color=(0, 255, 0, 255))
+                    dpg.add_file_extension(&#34;.h&#34;, color=(255, 0, 255, 255), custom_text=&#34;header&#34;)
+                    dpg.add_file_extension(&#34;Python(.py){.py}&#34;, color=(0, 255, 0, 255))
                     #dpg.add_button(label=&#34;Button on file dialog&#34;)
 
                 dpg.add_button(label=&#34;Show File Selector&#34;, user_data=dpg.last_container(), callback=lambda s, a, u: dpg.configure_item(u, show=True))
@@ -3730,9 +3731,10 @@ def show_demo():
 
                 with dpg.file_dialog(label=&#34;Demo File Dialog&#34;, show=False, callback=lambda s, a, u : print(s, a, u)):
                     dpg.add_file_extension(&#34;.*&#34;, color=(255, 255, 255, 255))
+                    dpg.add_file_extension(&#34;Source files (*.cpp *.h *.hpp){.cpp,.h,.hpp}&#34;, color=(0, 255, 255, 255))
                     dpg.add_file_extension(&#34;.cpp&#34;, color=(255, 255, 0, 255))
-                    dpg.add_file_extension(&#34;.h&#34;, color=(255, 0, 255, 255))
-                    dpg.add_file_extension(&#34;.py&#34;, color=(0, 255, 0, 255))
+                    dpg.add_file_extension(&#34;.h&#34;, color=(255, 0, 255, 255), custom_text=&#34;header&#34;)
+                    dpg.add_file_extension(&#34;Python(.py){.py}&#34;, color=(0, 255, 0, 255))
                     #dpg.add_button(label=&#34;Button on file dialog&#34;)
 
                 dpg.add_button(label=&#34;Show File Selector&#34;, user_data=dpg.last_container(), callback=lambda s, a, u: dpg.configure_item(u, show=True))

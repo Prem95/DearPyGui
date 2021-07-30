@@ -967,51 +967,13 @@ def set_viewport_vsync(value: bool):
     internal_dpg.configure_viewport(0, vsync=value)
 
 
-def set_viewport_border(value: bool):
-    &#34;&#34;&#34;Sets the viewport border.
+def set_viewport_decorated(value: bool):
+    &#34;&#34;&#34;Sets the viewport to be decorated.
 
     Returns:
         None
     &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, border=value)
-
-
-def set_viewport_caption(value: bool):
-    &#34;&#34;&#34;Sets the viewport caption.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, border=value)
-    internal_dpg.configure_viewport(0, caption=value)
-
-
-def set_viewport_overlapped(value: bool):
-    &#34;&#34;&#34;Sets the viewport overlapped.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, overlapped=value)
-
-
-def set_viewport_maximized_box(value: bool):
-    &#34;&#34;&#34;Sets the viewport maximized box.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, maximized_box=value)
-
-
-def set_viewport_minimized_box(value: bool):
-    &#34;&#34;&#34;Sets the viewport minimized box.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, minimized_box=value)
-
+    internal_dpg.configure_viewport(0, decorated=value)
 
 ########################################################################################################################
 # Viewport Getter Commands
@@ -1136,6 +1098,7 @@ def is_viewport_resizable() -&gt; bool:
     &#34;&#34;&#34;
     return internal_dpg.get_viewport_configuration()[&#34;resizable&#34;]
 
+
 def is_viewport_vsync_on() -&gt; bool:
     &#34;&#34;&#34;Checks the viewport vsync flag.
 
@@ -1145,49 +1108,13 @@ def is_viewport_vsync_on() -&gt; bool:
     return internal_dpg.get_viewport_configuration()[&#34;vsync&#34;]
 
 
-def get_viewport_border() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport border flag.
+def is_viewport_decorated() -&gt; bool:
+    &#34;&#34;&#34;Checks if the viewport is docorated.
 
     Returns:
         bool
     &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;border&#34;]
-
-
-def is_viewport_caption_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport caption flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;caption&#34;]
-
-
-def is_viewport_overlapped_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport overlapped flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;overlapped&#34;]
-
-
-def is_viewport_maximized_box_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport maximized box flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;maximized_box&#34;]
-
-
-def is_viewport_minimized_box_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport minimized box flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;minimized_box&#34;]
+    return internal_dpg.get_viewport_configuration()[&#34;decorated&#34;]
 
 ##########################################################
 # Container Context Managers
@@ -1929,11 +1856,11 @@ def theme(*, label: str =None, id: int =0, user_data: Any =None, default_theme: 
         finally:
                 internal_dpg.pop_container_stack()
 @contextmanager
-def tooltip(parent : str, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
+def tooltip(parent : int, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds an advanced tool tip for an item. This command must come immediately after the item the tip is for.
         Args:
-                parent (str): 
+                parent (int): 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **show (bool): Attempt to render widget.
@@ -5166,11 +5093,11 @@ def add_toggled_open_handler(parent : int, *, label: str =None, id: int =0, call
 
         return internal_dpg.add_toggled_open_handler(parent, label=label, id=id, callback=callback, show=show, user_data=user_data)
 
-def add_tooltip(parent : str, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
+def add_tooltip(parent : int, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds an advanced tool tip for an item. This command must come immediately after the item the tip is for.
         Args:
-                parent (str): 
+                parent (int): 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **show (bool): Attempt to render widget.
@@ -5363,7 +5290,7 @@ def clear_selected_nodes(node_editor : int) -&gt; None:
 
         return internal_dpg.clear_selected_nodes(node_editor)
 
-def create_viewport(*, title: str =&#39;Dear PyGui&#39;, small_icon: str =&#39;&#39;, large_icon: str =&#39;&#39;, width: int =1280, height: int =800, x_pos: int =100, y_pos: int =100, min_width: int =250, max_width: int =10000, min_height: int =250, max_height: int =10000, resizable: bool =True, vsync: bool =True, always_on_top: bool =False, maximized_box: bool =True, minimized_box: bool =True, border: bool =True, caption: bool =True, overlapped: bool =True, clear_color: List[float] =(0, 0, 0, 255)) -&gt; str:
+def create_viewport(*, title: str =&#39;Dear PyGui&#39;, small_icon: str =&#39;&#39;, large_icon: str =&#39;&#39;, width: int =1280, height: int =800, x_pos: int =100, y_pos: int =100, min_width: int =250, max_width: int =10000, min_height: int =250, max_height: int =10000, resizable: bool =True, vsync: bool =True, always_on_top: bool =False, decorated: bool =True, clear_color: List[float] =(0, 0, 0, 255)) -&gt; str:
         &#34;&#34;&#34;
         Creates a viewport.
         Args:
@@ -5381,17 +5308,13 @@ def create_viewport(*, title: str =&#39;Dear PyGui&#39;, small_icon: str =&#39;&
                 **resizable (bool): 
                 **vsync (bool): 
                 **always_on_top (bool): 
-                **maximized_box (bool): 
-                **minimized_box (bool): 
-                **border (bool): 
-                **caption (bool): 
-                **overlapped (bool): 
+                **decorated (bool): 
                 **clear_color (List[float]): 
         Returns:
                 str
         &#34;&#34;&#34;
 
-        return internal_dpg.create_viewport(title=title, small_icon=small_icon, large_icon=large_icon, width=width, height=height, x_pos=x_pos, y_pos=y_pos, min_width=min_width, max_width=max_width, min_height=min_height, max_height=max_height, resizable=resizable, vsync=vsync, always_on_top=always_on_top, maximized_box=maximized_box, minimized_box=minimized_box, border=border, caption=caption, overlapped=overlapped, clear_color=clear_color)
+        return internal_dpg.create_viewport(title=title, small_icon=small_icon, large_icon=large_icon, width=width, height=height, x_pos=x_pos, y_pos=y_pos, min_width=min_width, max_width=max_width, min_height=min_height, max_height=max_height, resizable=resizable, vsync=vsync, always_on_top=always_on_top, decorated=decorated, clear_color=clear_color)
 
 def delete_item(item : int, *, children_only: bool =False, slot: int =-1) -&gt; None:
         &#34;&#34;&#34;
@@ -15881,13 +15804,13 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_tooltip"><code class="name flex">
-<span>def <span class="ident">add_tooltip</span></span>(<span>parent: str, *, label: str = None, id: int = 0, show: bool = True, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">add_tooltip</span></span>(<span>parent: int, *, label: str = None, id: int = 0, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds an advanced tool tip for an item. This command must come immediately after the item the tip is for.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>parent</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>parent</code></strong> :&ensp;<code>int</code></dt>
 <dd>&nbsp;</dd>
 <dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
 <dd>Overrides 'name' as label.</dd>
@@ -15904,11 +15827,11 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_tooltip(parent : str, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
+<pre><code class="python">def add_tooltip(parent : int, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds an advanced tool tip for an item. This command must come immediately after the item the tip is for.
         Args:
-                parent (str): 
+                parent (int): 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **show (bool): Attempt to render widget.
@@ -16692,7 +16615,7 @@ def collapsing_header(*, label: str =None, id: int =0, indent: int =-1, parent: 
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.create_viewport"><code class="name flex">
-<span>def <span class="ident">create_viewport</span></span>(<span>*, title: str = 'Dear PyGui', small_icon: str = '', large_icon: str = '', width: int = 1280, height: int = 800, x_pos: int = 100, y_pos: int = 100, min_width: int = 250, max_width: int = 10000, min_height: int = 250, max_height: int = 10000, resizable: bool = True, vsync: bool = True, always_on_top: bool = False, maximized_box: bool = True, minimized_box: bool = True, border: bool = True, caption: bool = True, overlapped: bool = True, clear_color: List[float] = (0, 0, 0, 255)) ‑> str</span>
+<span>def <span class="ident">create_viewport</span></span>(<span>*, title: str = 'Dear PyGui', small_icon: str = '', large_icon: str = '', width: int = 1280, height: int = 800, x_pos: int = 100, y_pos: int = 100, min_width: int = 250, max_width: int = 10000, min_height: int = 250, max_height: int = 10000, resizable: bool = True, vsync: bool = True, always_on_top: bool = False, decorated: bool = True, clear_color: List[float] = (0, 0, 0, 255)) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a viewport.</p>
@@ -16726,15 +16649,7 @@ def collapsing_header(*, label: str =None, id: int =0, indent: int =-1, parent: 
 <dd>&nbsp;</dd>
 <dt><strong><code>**always_on_top</code></strong> :&ensp;<code>bool</code></dt>
 <dd>&nbsp;</dd>
-<dt><strong><code>**maximized_box</code></strong> :&ensp;<code>bool</code></dt>
-<dd>&nbsp;</dd>
-<dt><strong><code>**minimized_box</code></strong> :&ensp;<code>bool</code></dt>
-<dd>&nbsp;</dd>
-<dt><strong><code>**border</code></strong> :&ensp;<code>bool</code></dt>
-<dd>&nbsp;</dd>
-<dt><strong><code>**caption</code></strong> :&ensp;<code>bool</code></dt>
-<dd>&nbsp;</dd>
-<dt><strong><code>**overlapped</code></strong> :&ensp;<code>bool</code></dt>
+<dt><strong><code>**decorated</code></strong> :&ensp;<code>bool</code></dt>
 <dd>&nbsp;</dd>
 <dt><strong><code>**clear_color</code></strong> :&ensp;<code>List[float]</code></dt>
 <dd>&nbsp;</dd>
@@ -16745,7 +16660,7 @@ def collapsing_header(*, label: str =None, id: int =0, indent: int =-1, parent: 
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_viewport(*, title: str =&#39;Dear PyGui&#39;, small_icon: str =&#39;&#39;, large_icon: str =&#39;&#39;, width: int =1280, height: int =800, x_pos: int =100, y_pos: int =100, min_width: int =250, max_width: int =10000, min_height: int =250, max_height: int =10000, resizable: bool =True, vsync: bool =True, always_on_top: bool =False, maximized_box: bool =True, minimized_box: bool =True, border: bool =True, caption: bool =True, overlapped: bool =True, clear_color: List[float] =(0, 0, 0, 255)) -&gt; str:
+<pre><code class="python">def create_viewport(*, title: str =&#39;Dear PyGui&#39;, small_icon: str =&#39;&#39;, large_icon: str =&#39;&#39;, width: int =1280, height: int =800, x_pos: int =100, y_pos: int =100, min_width: int =250, max_width: int =10000, min_height: int =250, max_height: int =10000, resizable: bool =True, vsync: bool =True, always_on_top: bool =False, decorated: bool =True, clear_color: List[float] =(0, 0, 0, 255)) -&gt; str:
         &#34;&#34;&#34;
         Creates a viewport.
         Args:
@@ -16763,17 +16678,13 @@ def collapsing_header(*, label: str =None, id: int =0, indent: int =-1, parent: 
                 **resizable (bool): 
                 **vsync (bool): 
                 **always_on_top (bool): 
-                **maximized_box (bool): 
-                **minimized_box (bool): 
-                **border (bool): 
-                **caption (bool): 
-                **overlapped (bool): 
+                **decorated (bool): 
                 **clear_color (List[float]): 
         Returns:
                 str
         &#34;&#34;&#34;
 
-        return internal_dpg.create_viewport(title=title, small_icon=small_icon, large_icon=large_icon, width=width, height=height, x_pos=x_pos, y_pos=y_pos, min_width=min_width, max_width=max_width, min_height=min_height, max_height=max_height, resizable=resizable, vsync=vsync, always_on_top=always_on_top, maximized_box=maximized_box, minimized_box=minimized_box, border=border, caption=caption, overlapped=overlapped, clear_color=clear_color)</code></pre>
+        return internal_dpg.create_viewport(title=title, small_icon=small_icon, large_icon=large_icon, width=width, height=height, x_pos=x_pos, y_pos=y_pos, min_width=min_width, max_width=max_width, min_height=min_height, max_height=max_height, resizable=resizable, vsync=vsync, always_on_top=always_on_top, decorated=decorated, clear_color=clear_color)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.delete_item"><code class="name flex">
@@ -19215,26 +19126,6 @@ Args:</p>
         return internal_dpg.get_values(items)</code></pre>
 </details>
 </dd>
-<dt id="dearpygui.dearpygui.get_viewport_border"><code class="name flex">
-<span>def <span class="ident">get_viewport_border</span></span>(<span>) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Checks the viewport border flag.</p>
-<h2 id="returns">Returns</h2>
-<p>bool</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_viewport_border() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport border flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;border&#34;]</code></pre>
-</details>
-</dd>
 <dt id="dearpygui.dearpygui.get_viewport_clear_color"><code class="name flex">
 <span>def <span class="ident">get_viewport_clear_color</span></span>(<span>) ‑> List[int]</span>
 </code></dt>
@@ -20458,26 +20349,6 @@ Args:</p>
     return internal_dpg.get_viewport_configuration()[&#34;always_on_top&#34;]</code></pre>
 </details>
 </dd>
-<dt id="dearpygui.dearpygui.is_viewport_caption_on"><code class="name flex">
-<span>def <span class="ident">is_viewport_caption_on</span></span>(<span>) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Checks the viewport caption flag.</p>
-<h2 id="returns">Returns</h2>
-<p>bool</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def is_viewport_caption_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport caption flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;caption&#34;]</code></pre>
-</details>
-</dd>
 <dt id="dearpygui.dearpygui.is_viewport_created"><code class="name flex">
 <span>def <span class="ident">is_viewport_created</span></span>(<span>) ‑> bool</span>
 </code></dt>
@@ -20501,64 +20372,24 @@ Args:</p>
         return internal_dpg.is_viewport_created()</code></pre>
 </details>
 </dd>
-<dt id="dearpygui.dearpygui.is_viewport_maximized_box_on"><code class="name flex">
-<span>def <span class="ident">is_viewport_maximized_box_on</span></span>(<span>) ‑> bool</span>
+<dt id="dearpygui.dearpygui.is_viewport_decorated"><code class="name flex">
+<span>def <span class="ident">is_viewport_decorated</span></span>(<span>) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Checks the viewport maximized box flag.</p>
+<div class="desc"><p>Checks if the viewport is docorated.</p>
 <h2 id="returns">Returns</h2>
 <p>bool</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def is_viewport_maximized_box_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport maximized box flag.
+<pre><code class="python">def is_viewport_decorated() -&gt; bool:
+    &#34;&#34;&#34;Checks if the viewport is docorated.
 
     Returns:
         bool
     &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;maximized_box&#34;]</code></pre>
-</details>
-</dd>
-<dt id="dearpygui.dearpygui.is_viewport_minimized_box_on"><code class="name flex">
-<span>def <span class="ident">is_viewport_minimized_box_on</span></span>(<span>) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Checks the viewport minimized box flag.</p>
-<h2 id="returns">Returns</h2>
-<p>bool</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def is_viewport_minimized_box_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport minimized box flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;minimized_box&#34;]</code></pre>
-</details>
-</dd>
-<dt id="dearpygui.dearpygui.is_viewport_overlapped_on"><code class="name flex">
-<span>def <span class="ident">is_viewport_overlapped_on</span></span>(<span>) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Checks the viewport overlapped flag.</p>
-<h2 id="returns">Returns</h2>
-<p>bool</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def is_viewport_overlapped_on() -&gt; bool:
-    &#34;&#34;&#34;Checks the viewport overlapped flag.
-
-    Returns:
-        bool
-    &#34;&#34;&#34;
-    return internal_dpg.get_viewport_configuration()[&#34;overlapped&#34;]</code></pre>
+    return internal_dpg.get_viewport_configuration()[&#34;decorated&#34;]</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.is_viewport_resizable"><code class="name flex">
@@ -22539,47 +22370,6 @@ Args:</p>
     internal_dpg.configure_viewport(0, always_on_top=value)</code></pre>
 </details>
 </dd>
-<dt id="dearpygui.dearpygui.set_viewport_border"><code class="name flex">
-<span>def <span class="ident">set_viewport_border</span></span>(<span>value: bool)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Sets the viewport border.</p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def set_viewport_border(value: bool):
-    &#34;&#34;&#34;Sets the viewport border.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, border=value)</code></pre>
-</details>
-</dd>
-<dt id="dearpygui.dearpygui.set_viewport_caption"><code class="name flex">
-<span>def <span class="ident">set_viewport_caption</span></span>(<span>value: bool)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Sets the viewport caption.</p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def set_viewport_caption(value: bool):
-    &#34;&#34;&#34;Sets the viewport caption.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, border=value)
-    internal_dpg.configure_viewport(0, caption=value)</code></pre>
-</details>
-</dd>
 <dt id="dearpygui.dearpygui.set_viewport_clear_color"><code class="name flex">
 <span>def <span class="ident">set_viewport_clear_color</span></span>(<span>color: List[int])</span>
 </code></dt>
@@ -22598,6 +22388,26 @@ Args:</p>
         None
     &#34;&#34;&#34;
     internal_dpg.configure_viewport(0, clear_color=color)</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.set_viewport_decorated"><code class="name flex">
+<span>def <span class="ident">set_viewport_decorated</span></span>(<span>value: bool)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sets the viewport to be decorated.</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_viewport_decorated(value: bool):
+    &#34;&#34;&#34;Sets the viewport to be decorated.
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+    internal_dpg.configure_viewport(0, decorated=value)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.set_viewport_height"><code class="name flex">
@@ -22680,26 +22490,6 @@ Args:</p>
     internal_dpg.configure_viewport(0, max_width=width)</code></pre>
 </details>
 </dd>
-<dt id="dearpygui.dearpygui.set_viewport_maximized_box"><code class="name flex">
-<span>def <span class="ident">set_viewport_maximized_box</span></span>(<span>value: bool)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Sets the viewport maximized box.</p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def set_viewport_maximized_box(value: bool):
-    &#34;&#34;&#34;Sets the viewport maximized box.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, maximized_box=value)</code></pre>
-</details>
-</dd>
 <dt id="dearpygui.dearpygui.set_viewport_min_height"><code class="name flex">
 <span>def <span class="ident">set_viewport_min_height</span></span>(<span>height: int)</span>
 </code></dt>
@@ -22738,46 +22528,6 @@ Args:</p>
         None
     &#34;&#34;&#34;
     internal_dpg.configure_viewport(0, min_width=width)</code></pre>
-</details>
-</dd>
-<dt id="dearpygui.dearpygui.set_viewport_minimized_box"><code class="name flex">
-<span>def <span class="ident">set_viewport_minimized_box</span></span>(<span>value: bool)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Sets the viewport minimized box.</p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def set_viewport_minimized_box(value: bool):
-    &#34;&#34;&#34;Sets the viewport minimized box.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, minimized_box=value)</code></pre>
-</details>
-</dd>
-<dt id="dearpygui.dearpygui.set_viewport_overlapped"><code class="name flex">
-<span>def <span class="ident">set_viewport_overlapped</span></span>(<span>value: bool)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Sets the viewport overlapped.</p>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def set_viewport_overlapped(value: bool):
-    &#34;&#34;&#34;Sets the viewport overlapped.
-
-    Returns:
-        None
-    &#34;&#34;&#34;
-    internal_dpg.configure_viewport(0, overlapped=value)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.set_viewport_pos"><code class="name flex">
@@ -24048,13 +23798,13 @@ def theme(*, label: str =None, id: int =0, user_data: Any =None, default_theme: 
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.tooltip"><code class="name flex">
-<span>def <span class="ident">tooltip</span></span>(<span>parent: str, *, label: str = None, id: int = 0, show: bool = True, user_data: Any = None) ‑> int</span>
+<span>def <span class="ident">tooltip</span></span>(<span>parent: int, *, label: str = None, id: int = 0, show: bool = True, user_data: Any = None) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds an advanced tool tip for an item. This command must come immediately after the item the tip is for.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>parent</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>parent</code></strong> :&ensp;<code>int</code></dt>
 <dd>&nbsp;</dd>
 <dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
 <dd>Overrides 'name' as label.</dd>
@@ -24072,11 +23822,11 @@ def theme(*, label: str =None, id: int =0, user_data: Any =None, default_theme: 
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@contextmanager
-def tooltip(parent : str, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
+def tooltip(parent : int, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None) -&gt; int:
         &#34;&#34;&#34;
         Adds an advanced tool tip for an item. This command must come immediately after the item the tip is for.
         Args:
-                parent (str): 
+                parent (int): 
                 **label (str): Overrides &#39;name&#39; as label.
                 **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
                 **show (bool): Attempt to render widget.
@@ -24834,7 +24584,6 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.get_total_time" href="#dearpygui.dearpygui.get_total_time">get_total_time</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_value" href="#dearpygui.dearpygui.get_value">get_value</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_values" href="#dearpygui.dearpygui.get_values">get_values</a></code></li>
-<li><code><a title="dearpygui.dearpygui.get_viewport_border" href="#dearpygui.dearpygui.get_viewport_border">get_viewport_border</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_viewport_clear_color" href="#dearpygui.dearpygui.get_viewport_clear_color">get_viewport_clear_color</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_viewport_client_height" href="#dearpygui.dearpygui.get_viewport_client_height">get_viewport_client_height</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_viewport_client_width" href="#dearpygui.dearpygui.get_viewport_client_width">get_viewport_client_width</a></code></li>
@@ -24885,11 +24634,8 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.is_mouse_button_released" href="#dearpygui.dearpygui.is_mouse_button_released">is_mouse_button_released</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_plot_queried" href="#dearpygui.dearpygui.is_plot_queried">is_plot_queried</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_viewport_always_top" href="#dearpygui.dearpygui.is_viewport_always_top">is_viewport_always_top</a></code></li>
-<li><code><a title="dearpygui.dearpygui.is_viewport_caption_on" href="#dearpygui.dearpygui.is_viewport_caption_on">is_viewport_caption_on</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_viewport_created" href="#dearpygui.dearpygui.is_viewport_created">is_viewport_created</a></code></li>
-<li><code><a title="dearpygui.dearpygui.is_viewport_maximized_box_on" href="#dearpygui.dearpygui.is_viewport_maximized_box_on">is_viewport_maximized_box_on</a></code></li>
-<li><code><a title="dearpygui.dearpygui.is_viewport_minimized_box_on" href="#dearpygui.dearpygui.is_viewport_minimized_box_on">is_viewport_minimized_box_on</a></code></li>
-<li><code><a title="dearpygui.dearpygui.is_viewport_overlapped_on" href="#dearpygui.dearpygui.is_viewport_overlapped_on">is_viewport_overlapped_on</a></code></li>
+<li><code><a title="dearpygui.dearpygui.is_viewport_decorated" href="#dearpygui.dearpygui.is_viewport_decorated">is_viewport_decorated</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_viewport_resizable" href="#dearpygui.dearpygui.is_viewport_resizable">is_viewport_resizable</a></code></li>
 <li><code><a title="dearpygui.dearpygui.is_viewport_vsync_on" href="#dearpygui.dearpygui.is_viewport_vsync_on">is_viewport_vsync_on</a></code></li>
 <li><code><a title="dearpygui.dearpygui.last_container" href="#dearpygui.dearpygui.last_container">last_container</a></code></li>
@@ -24948,18 +24694,14 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.set_start_callback" href="#dearpygui.dearpygui.set_start_callback">set_start_callback</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_value" href="#dearpygui.dearpygui.set_value">set_value</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_always_top" href="#dearpygui.dearpygui.set_viewport_always_top">set_viewport_always_top</a></code></li>
-<li><code><a title="dearpygui.dearpygui.set_viewport_border" href="#dearpygui.dearpygui.set_viewport_border">set_viewport_border</a></code></li>
-<li><code><a title="dearpygui.dearpygui.set_viewport_caption" href="#dearpygui.dearpygui.set_viewport_caption">set_viewport_caption</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_clear_color" href="#dearpygui.dearpygui.set_viewport_clear_color">set_viewport_clear_color</a></code></li>
+<li><code><a title="dearpygui.dearpygui.set_viewport_decorated" href="#dearpygui.dearpygui.set_viewport_decorated">set_viewport_decorated</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_height" href="#dearpygui.dearpygui.set_viewport_height">set_viewport_height</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_large_icon" href="#dearpygui.dearpygui.set_viewport_large_icon">set_viewport_large_icon</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_max_height" href="#dearpygui.dearpygui.set_viewport_max_height">set_viewport_max_height</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_max_width" href="#dearpygui.dearpygui.set_viewport_max_width">set_viewport_max_width</a></code></li>
-<li><code><a title="dearpygui.dearpygui.set_viewport_maximized_box" href="#dearpygui.dearpygui.set_viewport_maximized_box">set_viewport_maximized_box</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_min_height" href="#dearpygui.dearpygui.set_viewport_min_height">set_viewport_min_height</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_min_width" href="#dearpygui.dearpygui.set_viewport_min_width">set_viewport_min_width</a></code></li>
-<li><code><a title="dearpygui.dearpygui.set_viewport_minimized_box" href="#dearpygui.dearpygui.set_viewport_minimized_box">set_viewport_minimized_box</a></code></li>
-<li><code><a title="dearpygui.dearpygui.set_viewport_overlapped" href="#dearpygui.dearpygui.set_viewport_overlapped">set_viewport_overlapped</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_pos" href="#dearpygui.dearpygui.set_viewport_pos">set_viewport_pos</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_resizable" href="#dearpygui.dearpygui.set_viewport_resizable">set_viewport_resizable</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_viewport_resize_callback" href="#dearpygui.dearpygui.set_viewport_resize_callback">set_viewport_resize_callback</a></code></li>
