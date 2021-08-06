@@ -82,11 +82,12 @@ def configure_viewport(item : int, **kwargs) -&gt; None:
 
 
 def setup_registries() -&gt; None:
-    &#34;&#34;&#34;Adds default registries for fonts, handlers, textures, and values.&#34;&#34;&#34;
+    &#34;&#34;&#34;Adds default registries for fonts, handlers, textures, colormaps, and values.&#34;&#34;&#34;
     internal_dpg.add_font_registry(id=internal_dpg.mvReservedUUID_0)
     internal_dpg.add_handler_registry(id=internal_dpg.mvReservedUUID_1)
     internal_dpg.add_texture_registry(id=internal_dpg.mvReservedUUID_2)
     internal_dpg.add_value_registry(id=internal_dpg.mvReservedUUID_3)
+    internal_dpg.add_colormap_registry(id=internal_dpg.mvReservedUUID_4)
 
 
 def setup_viewport():
@@ -1214,6 +1215,25 @@ def collapsing_header(*, label: str =None, id: int =0, indent: int =-1, parent: 
         &#34;&#34;&#34;
         try:
                 widget = internal_dpg.add_collapsing_header(label=label, id=id, indent=indent, parent=parent, before=before, payload_type=payload_type, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, delay_search=delay_search, tracked=tracked, track_offset=track_offset, user_data=user_data, use_internal_label=use_internal_label, closable=closable, default_open=default_open, open_on_double_click=open_on_double_click, open_on_arrow=open_on_arrow, leaf=leaf, bullet=bullet)
+                internal_dpg.push_container_stack(widget)
+                yield widget
+        finally:
+                internal_dpg.pop_container_stack()
+@contextmanager
+def colormap_registry(*, label: str =None, id: int =0, user_data: Any =None, use_internal_label: bool =True, show: bool =False) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a colormap registry.
+        Args:
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **show (bool): Attempt to render widget.
+        Yields:
+                int
+        &#34;&#34;&#34;
+        try:
+                widget = internal_dpg.add_colormap_registry(label=label, id=id, user_data=user_data, use_internal_label=use_internal_label, show=show)
                 internal_dpg.push_container_stack(widget)
                 yield widget
         finally:
@@ -2555,7 +2575,73 @@ def add_color_value(*, label: str =None, id: int =0, source: int =0, user_data: 
 
         return internal_dpg.add_color_value(label=label, id=id, source=source, user_data=user_data, use_internal_label=use_internal_label, default_value=default_value, parent=parent)
 
-def add_colormap_scale(*, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, source: int =0, show: bool =True, pos: List[int] =[], user_data: Any =None, use_internal_label: bool =True, default_value: int =0, min_scale: float =0.0, max_scale: float =1.0) -&gt; int:
+def add_colormap(colors : List[List[int]], qualitative : bool, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None, use_internal_label: bool =True, parent: int =internal_dpg.mvReservedUUID_4) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a legend that pairs values with colors. This is typically used with a heat series. 
+        Args:
+                colors (Any): 
+                qualitative (bool): 
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **show (bool): Attempt to render widget.
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **parent (int): Parent to add this item to. (runtime adding)
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap(colors, qualitative, label=label, id=id, show=show, user_data=user_data, use_internal_label=use_internal_label, parent=parent)
+
+def add_colormap_button(default_value : List[int] =(0, 0, 0, 255), *, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, payload_type: str =&#39;$$DPG_PAYLOAD&#39;, callback: Callable =None, drag_callback: Callable =None, drop_callback: Callable =None, show: bool =True, enabled: bool =True, pos: List[int] =[], filter_key: str =&#39;&#39;, tracked: bool =False, track_offset: float =0.5, user_data: Any =None, use_internal_label: bool =True, no_alpha: bool =False, no_border: bool =False, no_drag_drop: bool =False) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a color button.
+        Args:
+                *default_value (List[int]): 
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **width (int): Width of the item.
+                **height (int): Height of the item.
+                **indent (int): Offsets the widget to the right the specified number multiplied by the indent style.
+                **parent (int): Parent to add this item to. (runtime adding)
+                **before (int): This item will be displayed before the specified item in the parent.
+                **payload_type (str): Sender string type must be the same as the target for the target to run the payload_callback.
+                **callback (Callable): Registers a callback.
+                **drag_callback (Callable): Registers a drag callback for drag and drop.
+                **drop_callback (Callable): Registers a drop callback for drag and drop.
+                **show (bool): Attempt to render widget.
+                **enabled (bool): Turns off functionality of widget and applies the disabled theme.
+                **pos (List[int]): Places the item relative to window coordinates, [0,0] is top left.
+                **filter_key (str): Used by filter widget.
+                **tracked (bool): Scroll tracking
+                **track_offset (float): 0.0f:top, 0.5f:center, 1.0f:bottom
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **no_alpha (bool): Ignore Alpha component.
+                **no_border (bool): Disable border around the image.
+                **no_drag_drop (bool): Disable display of inline text label.
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap_button(default_value, label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, enabled=enabled, pos=pos, filter_key=filter_key, tracked=tracked, track_offset=track_offset, user_data=user_data, use_internal_label=use_internal_label, no_alpha=no_alpha, no_border=no_border, no_drag_drop=no_drag_drop)
+
+def add_colormap_registry(*, label: str =None, id: int =0, user_data: Any =None, use_internal_label: bool =True, show: bool =False) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a colormap registry.
+        Args:
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **show (bool): Attempt to render widget.
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap_registry(label=label, id=id, user_data=user_data, use_internal_label=use_internal_label, show=show)
+
+def add_colormap_scale(*, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, source: int =0, show: bool =True, pos: List[int] =[], user_data: Any =None, use_internal_label: bool =True, colormap: int =0, min_scale: float =0.0, max_scale: float =1.0) -&gt; int:
         &#34;&#34;&#34;
         Adds a legend that pairs values with colors. This is typically used with a heat series. 
         Args:
@@ -2571,14 +2657,43 @@ def add_colormap_scale(*, label: str =None, id: int =0, width: int =0, height: i
                 **pos (List[int]): Places the item relative to window coordinates, [0,0] is top left.
                 **user_data (Any): User data for callbacks.
                 **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
-                **default_value (int): 
+                **colormap (int): mvPlotColormap_* constants or mvColorMap uuid
                 **min_scale (float): Sets the min number of the color scale. Typically is the same as the min scale from the heat series.
                 **max_scale (float): Sets the max number of the color scale. Typically is the same as the max scale from the heat series.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_colormap_scale(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, source=source, show=show, pos=pos, user_data=user_data, use_internal_label=use_internal_label, default_value=default_value, min_scale=min_scale, max_scale=max_scale)
+        return internal_dpg.add_colormap_scale(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, source=source, show=show, pos=pos, user_data=user_data, use_internal_label=use_internal_label, colormap=colormap, min_scale=min_scale, max_scale=max_scale)
+
+def add_colormap_slider(*, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, payload_type: str =&#39;$$DPG_PAYLOAD&#39;, callback: Callable =None, drag_callback: Callable =None, drop_callback: Callable =None, show: bool =True, pos: List[int] =[], filter_key: str =&#39;&#39;, tracked: bool =False, track_offset: float =0.5, user_data: Any =None, use_internal_label: bool =True, default_value: float =0.0) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a color button.
+        Args:
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **width (int): Width of the item.
+                **height (int): Height of the item.
+                **indent (int): Offsets the widget to the right the specified number multiplied by the indent style.
+                **parent (int): Parent to add this item to. (runtime adding)
+                **before (int): This item will be displayed before the specified item in the parent.
+                **payload_type (str): Sender string type must be the same as the target for the target to run the payload_callback.
+                **callback (Callable): Registers a callback.
+                **drag_callback (Callable): Registers a drag callback for drag and drop.
+                **drop_callback (Callable): Registers a drop callback for drag and drop.
+                **show (bool): Attempt to render widget.
+                **pos (List[int]): Places the item relative to window coordinates, [0,0] is top left.
+                **filter_key (str): Used by filter widget.
+                **tracked (bool): Scroll tracking
+                **track_offset (float): 0.0f:top, 0.5f:center, 1.0f:bottom
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **default_value (float): 
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap_slider(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, tracked=tracked, track_offset=track_offset, user_data=user_data, use_internal_label=use_internal_label, default_value=default_value)
 
 def add_combo(items : List[str] =(), *, label: str =None, id: int =0, width: int =0, indent: int =-1, parent: int =0, before: int =0, source: int =0, payload_type: str =&#39;$$DPG_PAYLOAD&#39;, callback: Callable =None, drag_callback: Callable =None, drop_callback: Callable =None, show: bool =True, enabled: bool =True, pos: List[int] =[], filter_key: str =&#39;&#39;, tracked: bool =False, track_offset: float =0.5, user_data: Any =None, use_internal_label: bool =True, default_value: str =&#39;&#39;, popup_align_left: bool =False, no_arrow_button: bool =False, no_preview: bool =False, height_mode: int =1) -&gt; int:
         &#34;&#34;&#34;
@@ -5735,7 +5850,7 @@ def draw_quad(p1 : List[float], p2 : List[float], p3 : List[float], p4 : List[fl
 
         return internal_dpg.draw_quad(p1, p2, p3, p4, label=label, id=id, parent=parent, before=before, show=show, user_data=user_data, use_internal_label=use_internal_label, color=color, fill=fill, thickness=thickness)
 
-def draw_rectangle(pmin : List[float], pmax : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, show: bool =True, user_data: Any =None, use_internal_label: bool =True, color: List[int] =(255, 255, 255, 255), fill: List[int] =(0, 0, 0, -255), rounding: float =0.0, thickness: float =1.0) -&gt; int:
+def draw_rectangle(pmin : List[float], pmax : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, show: bool =True, user_data: Any =None, use_internal_label: bool =True, color: List[int] =(255, 255, 255, 255), color_upper_left: List[int] =(255, 255, 255, 255), color_upper_right: List[int] =(255, 255, 255, 255), color_bottom_right: List[int] =(255, 255, 255, 255), color_bottom_left: List[int] =(255, 255, 255, 255), fill: List[int] =(0, 0, 0, -255), multicolor: bool =False, rounding: float =0.0, thickness: float =1.0) -&gt; int:
         &#34;&#34;&#34;
         Draws a rectangle on a drawing.
         Args:
@@ -5749,14 +5864,19 @@ def draw_rectangle(pmin : List[float], pmax : List[float], *, label: str =None, 
                 **user_data (Any): User data for callbacks.
                 **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
                 **color (List[int]): 
+                **color_upper_left (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
+                **color_upper_right (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
+                **color_bottom_right (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
+                **color_bottom_left (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
                 **fill (List[int]): 
-                **rounding (float): Number of pixels of the radius that will round the corners of the rectangle.
+                **multicolor (bool): 
+                **rounding (float): Number of pixels of the radius that will round the corners of the rectangle. Note: doesn&#39;t work with multicolor
                 **thickness (float): 
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.draw_rectangle(pmin, pmax, label=label, id=id, parent=parent, before=before, show=show, user_data=user_data, use_internal_label=use_internal_label, color=color, fill=fill, rounding=rounding, thickness=thickness)
+        return internal_dpg.draw_rectangle(pmin, pmax, label=label, id=id, parent=parent, before=before, show=show, user_data=user_data, use_internal_label=use_internal_label, color=color, color_upper_left=color_upper_left, color_upper_right=color_upper_right, color_bottom_right=color_bottom_right, color_bottom_left=color_bottom_left, fill=fill, multicolor=multicolor, rounding=rounding, thickness=thickness)
 
 def draw_text(pos : List[float], text : str, *, label: str =None, id: int =0, parent: int =0, before: int =0, show: bool =True, user_data: Any =None, use_internal_label: bool =True, color: List[int] =(255, 255, 255, 255), size: float =10.0) -&gt; int:
         &#34;&#34;&#34;
@@ -5885,6 +6005,18 @@ def get_axis_limits(axis : int) -&gt; List[float]:
         &#34;&#34;&#34;
 
         return internal_dpg.get_axis_limits(axis)
+
+def get_colormap_color(colormap : int, index : int) -&gt; List[int]:
+        &#34;&#34;&#34;
+        Returns a color from a colormap given an index &gt;= 0 (modulo will be performed). This command can only be ran once the app is started.
+        Args:
+                colormap (int): 
+                index (int): 
+        Returns:
+                List[int]
+        &#34;&#34;&#34;
+
+        return internal_dpg.get_colormap_color(colormap, index)
 
 def get_dearpygui_version() -&gt; str:
         &#34;&#34;&#34;
@@ -6466,6 +6598,18 @@ def reset_pos(item : int) -&gt; None:
 
         return internal_dpg.reset_pos(item)
 
+def sample_colormap(colormap : int, t : float) -&gt; List[int]:
+        &#34;&#34;&#34;
+        Returns a color from a colormap given t between 0 and 1. This command can only be ran once the app is started.
+        Args:
+                colormap (int): 
+                t (float): 
+        Returns:
+                List[int]
+        &#34;&#34;&#34;
+
+        return internal_dpg.sample_colormap(colormap, t)
+
 def save_init_file(file : str) -&gt; None:
         &#34;&#34;&#34;
         Save dpg.ini file.
@@ -6512,6 +6656,18 @@ def set_axis_ticks(axis : int, label_pairs : Any) -&gt; None:
         &#34;&#34;&#34;
 
         return internal_dpg.set_axis_ticks(axis, label_pairs)
+
+def set_colormap(item : int, source : int) -&gt; None:
+        &#34;&#34;&#34;
+        Sets the color map for widgets that accept it.
+        Args:
+                item (int): 
+                source (int): 
+        Returns:
+                None
+        &#34;&#34;&#34;
+
+        return internal_dpg.set_colormap(item, source)
 
 def set_exit_callback(callback : Callable) -&gt; str:
         &#34;&#34;&#34;
@@ -7049,17 +7205,6 @@ mvPlotMarker_Right=internal_dpg.mvPlotMarker_Right
 mvPlotMarker_Cross=internal_dpg.mvPlotMarker_Cross
 mvPlotMarker_Plus=internal_dpg.mvPlotMarker_Plus
 mvPlotMarker_Asterisk=internal_dpg.mvPlotMarker_Asterisk
-mvPlotColormap_Default=internal_dpg.mvPlotColormap_Default
-mvPlotColormap_Deep=internal_dpg.mvPlotColormap_Deep
-mvPlotColormap_Dark=internal_dpg.mvPlotColormap_Dark
-mvPlotColormap_Pastel=internal_dpg.mvPlotColormap_Pastel
-mvPlotColormap_Paired=internal_dpg.mvPlotColormap_Paired
-mvPlotColormap_Viridis=internal_dpg.mvPlotColormap_Viridis
-mvPlotColormap_Plasma=internal_dpg.mvPlotColormap_Plasma
-mvPlotColormap_Hot=internal_dpg.mvPlotColormap_Hot
-mvPlotColormap_Cool=internal_dpg.mvPlotColormap_Cool
-mvPlotColormap_Pink=internal_dpg.mvPlotColormap_Pink
-mvPlotColormap_Jet=internal_dpg.mvPlotColormap_Jet
 mvSimplePlot=internal_dpg.mvSimplePlot
 mvDrawlist=internal_dpg.mvDrawlist
 mvWindowAppItem=internal_dpg.mvWindowAppItem
@@ -7383,6 +7528,27 @@ mvRawTexture=internal_dpg.mvRawTexture
 mvFormat_Float_rgba=internal_dpg.mvFormat_Float_rgba
 mvFormat_Float_rgb=internal_dpg.mvFormat_Float_rgb
 mvSubPlots=internal_dpg.mvSubPlots
+mvColorMap=internal_dpg.mvColorMap
+mvPlotColormap_Default=internal_dpg.mvPlotColormap_Default
+mvPlotColormap_Deep=internal_dpg.mvPlotColormap_Deep
+mvPlotColormap_Dark=internal_dpg.mvPlotColormap_Dark
+mvPlotColormap_Pastel=internal_dpg.mvPlotColormap_Pastel
+mvPlotColormap_Paired=internal_dpg.mvPlotColormap_Paired
+mvPlotColormap_Viridis=internal_dpg.mvPlotColormap_Viridis
+mvPlotColormap_Plasma=internal_dpg.mvPlotColormap_Plasma
+mvPlotColormap_Hot=internal_dpg.mvPlotColormap_Hot
+mvPlotColormap_Cool=internal_dpg.mvPlotColormap_Cool
+mvPlotColormap_Pink=internal_dpg.mvPlotColormap_Pink
+mvPlotColormap_Jet=internal_dpg.mvPlotColormap_Jet
+mvPlotColormap_Twilight=internal_dpg.mvPlotColormap_Twilight
+mvPlotColormap_RdBu=internal_dpg.mvPlotColormap_RdBu
+mvPlotColormap_BrBG=internal_dpg.mvPlotColormap_BrBG
+mvPlotColormap_PiYG=internal_dpg.mvPlotColormap_PiYG
+mvPlotColormap_Spectral=internal_dpg.mvPlotColormap_Spectral
+mvPlotColormap_Greys=internal_dpg.mvPlotColormap_Greys
+mvColorMapRegistry=internal_dpg.mvColorMapRegistry
+mvColorMapButton=internal_dpg.mvColorMapButton
+mvColorMapSlider=internal_dpg.mvColorMapSlider
 mvReservedUUID_0=internal_dpg.mvReservedUUID_0
 mvReservedUUID_1=internal_dpg.mvReservedUUID_1
 mvReservedUUID_2=internal_dpg.mvReservedUUID_2
@@ -8831,8 +8997,191 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
         return internal_dpg.add_color_value(label=label, id=id, source=source, user_data=user_data, use_internal_label=use_internal_label, default_value=default_value, parent=parent)</code></pre>
 </details>
 </dd>
+<dt id="dearpygui.dearpygui.add_colormap"><code class="name flex">
+<span>def <span class="ident">add_colormap</span></span>(<span>colors: List[List[int]], qualitative: bool, *, label: str = None, id: int = 0, show: bool = True, user_data: Any = None, use_internal_label: bool = True, parent: int = 14) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a legend that pairs values with colors. This is typically used with a heat series. </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>colors</code></strong> :&ensp;<code>Any</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>qualitative</code></strong> :&ensp;<code>bool</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
+<dd>Overrides 'name' as label.</dd>
+<dt><strong><code>**id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
+<dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
+<dd>User data for callbacks.</dd>
+<dt><strong><code>**use_internal_label</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use generated internal label instead of user specified (appends ### uuid).</dd>
+<dt><strong><code>**parent</code></strong> :&ensp;<code>int</code></dt>
+<dd>Parent to add this item to. (runtime adding)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_colormap(colors : List[List[int]], qualitative : bool, *, label: str =None, id: int =0, show: bool =True, user_data: Any =None, use_internal_label: bool =True, parent: int =internal_dpg.mvReservedUUID_4) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a legend that pairs values with colors. This is typically used with a heat series. 
+        Args:
+                colors (Any): 
+                qualitative (bool): 
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **show (bool): Attempt to render widget.
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **parent (int): Parent to add this item to. (runtime adding)
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap(colors, qualitative, label=label, id=id, show=show, user_data=user_data, use_internal_label=use_internal_label, parent=parent)</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.add_colormap_button"><code class="name flex">
+<span>def <span class="ident">add_colormap_button</span></span>(<span>default_value: List[int] = (0, 0, 0, 255), *, label: str = None, id: int = 0, width: int = 0, height: int = 0, indent: int = -1, parent: int = 0, before: int = 0, payload_type: str = '$$DPG_PAYLOAD', callback: Callable = None, drag_callback: Callable = None, drop_callback: Callable = None, show: bool = True, enabled: bool = True, pos: List[int] = [], filter_key: str = '', tracked: bool = False, track_offset: float = 0.5, user_data: Any = None, use_internal_label: bool = True, no_alpha: bool = False, no_border: bool = False, no_drag_drop: bool = False) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a color button.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*default_value</code></strong> :&ensp;<code>List[int]</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
+<dd>Overrides 'name' as label.</dd>
+<dt><strong><code>**id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
+<dt><strong><code>**width</code></strong> :&ensp;<code>int</code></dt>
+<dd>Width of the item.</dd>
+<dt><strong><code>**height</code></strong> :&ensp;<code>int</code></dt>
+<dd>Height of the item.</dd>
+<dt><strong><code>**indent</code></strong> :&ensp;<code>int</code></dt>
+<dd>Offsets the widget to the right the specified number multiplied by the indent style.</dd>
+<dt><strong><code>**parent</code></strong> :&ensp;<code>int</code></dt>
+<dd>Parent to add this item to. (runtime adding)</dd>
+<dt><strong><code>**before</code></strong> :&ensp;<code>int</code></dt>
+<dd>This item will be displayed before the specified item in the parent.</dd>
+<dt><strong><code>**payload_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>Sender string type must be the same as the target for the target to run the payload_callback.</dd>
+<dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Registers a callback.</dd>
+<dt><strong><code>**drag_callback</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Registers a drag callback for drag and drop.</dd>
+<dt><strong><code>**drop_callback</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Registers a drop callback for drag and drop.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
+<dt><strong><code>**enabled</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Turns off functionality of widget and applies the disabled theme.</dd>
+<dt><strong><code>**pos</code></strong> :&ensp;<code>List[int]</code></dt>
+<dd>Places the item relative to window coordinates, [0,0] is top left.</dd>
+<dt><strong><code>**filter_key</code></strong> :&ensp;<code>str</code></dt>
+<dd>Used by filter widget.</dd>
+<dt><strong><code>**tracked</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Scroll tracking</dd>
+<dt><strong><code>**track_offset</code></strong> :&ensp;<code>float</code></dt>
+<dd>0.0f:top, 0.5f:center, 1.0f:bottom</dd>
+<dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
+<dd>User data for callbacks.</dd>
+<dt><strong><code>**use_internal_label</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use generated internal label instead of user specified (appends ### uuid).</dd>
+<dt><strong><code>**no_alpha</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Ignore Alpha component.</dd>
+<dt><strong><code>**no_border</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Disable border around the image.</dd>
+<dt><strong><code>**no_drag_drop</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Disable display of inline text label.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_colormap_button(default_value : List[int] =(0, 0, 0, 255), *, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, payload_type: str =&#39;$$DPG_PAYLOAD&#39;, callback: Callable =None, drag_callback: Callable =None, drop_callback: Callable =None, show: bool =True, enabled: bool =True, pos: List[int] =[], filter_key: str =&#39;&#39;, tracked: bool =False, track_offset: float =0.5, user_data: Any =None, use_internal_label: bool =True, no_alpha: bool =False, no_border: bool =False, no_drag_drop: bool =False) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a color button.
+        Args:
+                *default_value (List[int]): 
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **width (int): Width of the item.
+                **height (int): Height of the item.
+                **indent (int): Offsets the widget to the right the specified number multiplied by the indent style.
+                **parent (int): Parent to add this item to. (runtime adding)
+                **before (int): This item will be displayed before the specified item in the parent.
+                **payload_type (str): Sender string type must be the same as the target for the target to run the payload_callback.
+                **callback (Callable): Registers a callback.
+                **drag_callback (Callable): Registers a drag callback for drag and drop.
+                **drop_callback (Callable): Registers a drop callback for drag and drop.
+                **show (bool): Attempt to render widget.
+                **enabled (bool): Turns off functionality of widget and applies the disabled theme.
+                **pos (List[int]): Places the item relative to window coordinates, [0,0] is top left.
+                **filter_key (str): Used by filter widget.
+                **tracked (bool): Scroll tracking
+                **track_offset (float): 0.0f:top, 0.5f:center, 1.0f:bottom
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **no_alpha (bool): Ignore Alpha component.
+                **no_border (bool): Disable border around the image.
+                **no_drag_drop (bool): Disable display of inline text label.
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap_button(default_value, label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, enabled=enabled, pos=pos, filter_key=filter_key, tracked=tracked, track_offset=track_offset, user_data=user_data, use_internal_label=use_internal_label, no_alpha=no_alpha, no_border=no_border, no_drag_drop=no_drag_drop)</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.add_colormap_registry"><code class="name flex">
+<span>def <span class="ident">add_colormap_registry</span></span>(<span>*, label: str = None, id: int = 0, user_data: Any = None, use_internal_label: bool = True, show: bool = False) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a colormap registry.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
+<dd>Overrides 'name' as label.</dd>
+<dt><strong><code>**id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
+<dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
+<dd>User data for callbacks.</dd>
+<dt><strong><code>**use_internal_label</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use generated internal label instead of user specified (appends ### uuid).</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_colormap_registry(*, label: str =None, id: int =0, user_data: Any =None, use_internal_label: bool =True, show: bool =False) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a colormap registry.
+        Args:
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **show (bool): Attempt to render widget.
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap_registry(label=label, id=id, user_data=user_data, use_internal_label=use_internal_label, show=show)</code></pre>
+</details>
+</dd>
 <dt id="dearpygui.dearpygui.add_colormap_scale"><code class="name flex">
-<span>def <span class="ident">add_colormap_scale</span></span>(<span>*, label: str = None, id: int = 0, width: int = 0, height: int = 0, indent: int = -1, parent: int = 0, before: int = 0, source: int = 0, show: bool = True, pos: List[int] = [], user_data: Any = None, use_internal_label: bool = True, default_value: int = 0, min_scale: float = 0.0, max_scale: float = 1.0) ‑> int</span>
+<span>def <span class="ident">add_colormap_scale</span></span>(<span>*, label: str = None, id: int = 0, width: int = 0, height: int = 0, indent: int = -1, parent: int = 0, before: int = 0, source: int = 0, show: bool = True, pos: List[int] = [], user_data: Any = None, use_internal_label: bool = True, colormap: int = 0, min_scale: float = 0.0, max_scale: float = 1.0) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a legend that pairs values with colors. This is typically used with a heat series. </p>
@@ -8862,8 +9211,8 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <dd>User data for callbacks.</dd>
 <dt><strong><code>**use_internal_label</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Use generated internal label instead of user specified (appends ### uuid).</dd>
-<dt><strong><code>**default_value</code></strong> :&ensp;<code>int</code></dt>
-<dd>&nbsp;</dd>
+<dt><strong><code>**colormap</code></strong> :&ensp;<code>int</code></dt>
+<dd>mvPlotColormap_* constants or mvColorMap uuid</dd>
 <dt><strong><code>**min_scale</code></strong> :&ensp;<code>float</code></dt>
 <dd>Sets the min number of the color scale. Typically is the same as the min scale from the heat series.</dd>
 <dt><strong><code>**max_scale</code></strong> :&ensp;<code>float</code></dt>
@@ -8875,7 +9224,7 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_colormap_scale(*, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, source: int =0, show: bool =True, pos: List[int] =[], user_data: Any =None, use_internal_label: bool =True, default_value: int =0, min_scale: float =0.0, max_scale: float =1.0) -&gt; int:
+<pre><code class="python">def add_colormap_scale(*, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, source: int =0, show: bool =True, pos: List[int] =[], user_data: Any =None, use_internal_label: bool =True, colormap: int =0, min_scale: float =0.0, max_scale: float =1.0) -&gt; int:
         &#34;&#34;&#34;
         Adds a legend that pairs values with colors. This is typically used with a heat series. 
         Args:
@@ -8891,14 +9240,96 @@ mvReservedUUID_9=internal_dpg.mvReservedUUID_9</code></pre>
                 **pos (List[int]): Places the item relative to window coordinates, [0,0] is top left.
                 **user_data (Any): User data for callbacks.
                 **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
-                **default_value (int): 
+                **colormap (int): mvPlotColormap_* constants or mvColorMap uuid
                 **min_scale (float): Sets the min number of the color scale. Typically is the same as the min scale from the heat series.
                 **max_scale (float): Sets the max number of the color scale. Typically is the same as the max scale from the heat series.
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.add_colormap_scale(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, source=source, show=show, pos=pos, user_data=user_data, use_internal_label=use_internal_label, default_value=default_value, min_scale=min_scale, max_scale=max_scale)</code></pre>
+        return internal_dpg.add_colormap_scale(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, source=source, show=show, pos=pos, user_data=user_data, use_internal_label=use_internal_label, colormap=colormap, min_scale=min_scale, max_scale=max_scale)</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.add_colormap_slider"><code class="name flex">
+<span>def <span class="ident">add_colormap_slider</span></span>(<span>*, label: str = None, id: int = 0, width: int = 0, height: int = 0, indent: int = -1, parent: int = 0, before: int = 0, payload_type: str = '$$DPG_PAYLOAD', callback: Callable = None, drag_callback: Callable = None, drop_callback: Callable = None, show: bool = True, pos: List[int] = [], filter_key: str = '', tracked: bool = False, track_offset: float = 0.5, user_data: Any = None, use_internal_label: bool = True, default_value: float = 0.0) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a color button.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
+<dd>Overrides 'name' as label.</dd>
+<dt><strong><code>**id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
+<dt><strong><code>**width</code></strong> :&ensp;<code>int</code></dt>
+<dd>Width of the item.</dd>
+<dt><strong><code>**height</code></strong> :&ensp;<code>int</code></dt>
+<dd>Height of the item.</dd>
+<dt><strong><code>**indent</code></strong> :&ensp;<code>int</code></dt>
+<dd>Offsets the widget to the right the specified number multiplied by the indent style.</dd>
+<dt><strong><code>**parent</code></strong> :&ensp;<code>int</code></dt>
+<dd>Parent to add this item to. (runtime adding)</dd>
+<dt><strong><code>**before</code></strong> :&ensp;<code>int</code></dt>
+<dd>This item will be displayed before the specified item in the parent.</dd>
+<dt><strong><code>**payload_type</code></strong> :&ensp;<code>str</code></dt>
+<dd>Sender string type must be the same as the target for the target to run the payload_callback.</dd>
+<dt><strong><code>**callback</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Registers a callback.</dd>
+<dt><strong><code>**drag_callback</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Registers a drag callback for drag and drop.</dd>
+<dt><strong><code>**drop_callback</code></strong> :&ensp;<code>Callable</code></dt>
+<dd>Registers a drop callback for drag and drop.</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
+<dt><strong><code>**pos</code></strong> :&ensp;<code>List[int]</code></dt>
+<dd>Places the item relative to window coordinates, [0,0] is top left.</dd>
+<dt><strong><code>**filter_key</code></strong> :&ensp;<code>str</code></dt>
+<dd>Used by filter widget.</dd>
+<dt><strong><code>**tracked</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Scroll tracking</dd>
+<dt><strong><code>**track_offset</code></strong> :&ensp;<code>float</code></dt>
+<dd>0.0f:top, 0.5f:center, 1.0f:bottom</dd>
+<dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
+<dd>User data for callbacks.</dd>
+<dt><strong><code>**use_internal_label</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use generated internal label instead of user specified (appends ### uuid).</dd>
+<dt><strong><code>**default_value</code></strong> :&ensp;<code>float</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_colormap_slider(*, label: str =None, id: int =0, width: int =0, height: int =0, indent: int =-1, parent: int =0, before: int =0, payload_type: str =&#39;$$DPG_PAYLOAD&#39;, callback: Callable =None, drag_callback: Callable =None, drop_callback: Callable =None, show: bool =True, pos: List[int] =[], filter_key: str =&#39;&#39;, tracked: bool =False, track_offset: float =0.5, user_data: Any =None, use_internal_label: bool =True, default_value: float =0.0) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a color button.
+        Args:
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **width (int): Width of the item.
+                **height (int): Height of the item.
+                **indent (int): Offsets the widget to the right the specified number multiplied by the indent style.
+                **parent (int): Parent to add this item to. (runtime adding)
+                **before (int): This item will be displayed before the specified item in the parent.
+                **payload_type (str): Sender string type must be the same as the target for the target to run the payload_callback.
+                **callback (Callable): Registers a callback.
+                **drag_callback (Callable): Registers a drag callback for drag and drop.
+                **drop_callback (Callable): Registers a drop callback for drag and drop.
+                **show (bool): Attempt to render widget.
+                **pos (List[int]): Places the item relative to window coordinates, [0,0] is top left.
+                **filter_key (str): Used by filter widget.
+                **tracked (bool): Scroll tracking
+                **track_offset (float): 0.0f:top, 0.5f:center, 1.0f:bottom
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **default_value (float): 
+        Returns:
+                int
+        &#34;&#34;&#34;
+
+        return internal_dpg.add_colormap_slider(label=label, id=id, width=width, height=height, indent=indent, parent=parent, before=before, payload_type=payload_type, callback=callback, drag_callback=drag_callback, drop_callback=drop_callback, show=show, pos=pos, filter_key=filter_key, tracked=tracked, track_offset=track_offset, user_data=user_data, use_internal_label=use_internal_label, default_value=default_value)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.add_combo"><code class="name flex">
@@ -17192,6 +17623,51 @@ def collapsing_header(*, label: str =None, id: int =0, indent: int =-1, parent: 
                 internal_dpg.pop_container_stack()</code></pre>
 </details>
 </dd>
+<dt id="dearpygui.dearpygui.colormap_registry"><code class="name flex">
+<span>def <span class="ident">colormap_registry</span></span>(<span>*, label: str = None, id: int = 0, user_data: Any = None, use_internal_label: bool = True, show: bool = False) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a colormap registry.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>**label</code></strong> :&ensp;<code>str</code></dt>
+<dd>Overrides 'name' as label.</dd>
+<dt><strong><code>**id</code></strong> :&ensp;<code>int</code></dt>
+<dd>Unique id used to programmatically refer to the item.If label is unused this will be the label.</dd>
+<dt><strong><code>**user_data</code></strong> :&ensp;<code>Any</code></dt>
+<dd>User data for callbacks.</dd>
+<dt><strong><code>**use_internal_label</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use generated internal label instead of user specified (appends ### uuid).</dd>
+<dt><strong><code>**show</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Attempt to render widget.</dd>
+</dl>
+<h2 id="yields">Yields</h2>
+<p>int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@contextmanager
+def colormap_registry(*, label: str =None, id: int =0, user_data: Any =None, use_internal_label: bool =True, show: bool =False) -&gt; int:
+        &#34;&#34;&#34;
+        Adds a colormap registry.
+        Args:
+                **label (str): Overrides &#39;name&#39; as label.
+                **id (int): Unique id used to programmatically refer to the item.If label is unused this will be the label.
+                **user_data (Any): User data for callbacks.
+                **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
+                **show (bool): Attempt to render widget.
+        Yields:
+                int
+        &#34;&#34;&#34;
+        try:
+                widget = internal_dpg.add_colormap_registry(label=label, id=id, user_data=user_data, use_internal_label=use_internal_label, show=show)
+                internal_dpg.push_container_stack(widget)
+                yield widget
+        finally:
+                internal_dpg.pop_container_stack()</code></pre>
+</details>
+</dd>
 <dt id="dearpygui.dearpygui.configure_item"><code class="name flex">
 <span>def <span class="ident">configure_item</span></span>(<span>item: int, **kwargs) ‑> None</span>
 </code></dt>
@@ -18114,7 +18590,7 @@ def draw_layer(*, label: str =None, id: int =0, parent: int =0, before: int =0, 
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.draw_rectangle"><code class="name flex">
-<span>def <span class="ident">draw_rectangle</span></span>(<span>pmin: List[float], pmax: List[float], *, label: str = None, id: int = 0, parent: int = 0, before: int = 0, show: bool = True, user_data: Any = None, use_internal_label: bool = True, color: List[int] = (255, 255, 255, 255), fill: List[int] = (0, 0, 0, -255), rounding: float = 0.0, thickness: float = 1.0) ‑> int</span>
+<span>def <span class="ident">draw_rectangle</span></span>(<span>pmin: List[float], pmax: List[float], *, label: str = None, id: int = 0, parent: int = 0, before: int = 0, show: bool = True, user_data: Any = None, use_internal_label: bool = True, color: List[int] = (255, 255, 255, 255), color_upper_left: List[int] = (255, 255, 255, 255), color_upper_right: List[int] = (255, 255, 255, 255), color_bottom_right: List[int] = (255, 255, 255, 255), color_bottom_left: List[int] = (255, 255, 255, 255), fill: List[int] = (0, 0, 0, -255), multicolor: bool = False, rounding: float = 0.0, thickness: float = 1.0) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Draws a rectangle on a drawing.</p>
@@ -18140,10 +18616,20 @@ def draw_layer(*, label: str =None, id: int =0, parent: int =0, before: int =0, 
 <dd>Use generated internal label instead of user specified (appends ### uuid).</dd>
 <dt><strong><code>**color</code></strong> :&ensp;<code>List[int]</code></dt>
 <dd>&nbsp;</dd>
+<dt><strong><code>**color_upper_left</code></strong> :&ensp;<code>List[int]</code></dt>
+<dd>'multicolor' must be set to 'True'</dd>
+<dt><strong><code>**color_upper_right</code></strong> :&ensp;<code>List[int]</code></dt>
+<dd>'multicolor' must be set to 'True'</dd>
+<dt><strong><code>**color_bottom_right</code></strong> :&ensp;<code>List[int]</code></dt>
+<dd>'multicolor' must be set to 'True'</dd>
+<dt><strong><code>**color_bottom_left</code></strong> :&ensp;<code>List[int]</code></dt>
+<dd>'multicolor' must be set to 'True'</dd>
 <dt><strong><code>**fill</code></strong> :&ensp;<code>List[int]</code></dt>
 <dd>&nbsp;</dd>
+<dt><strong><code>**multicolor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>&nbsp;</dd>
 <dt><strong><code>**rounding</code></strong> :&ensp;<code>float</code></dt>
-<dd>Number of pixels of the radius that will round the corners of the rectangle.</dd>
+<dd>Number of pixels of the radius that will round the corners of the rectangle. Note: doesn't work with multicolor</dd>
 <dt><strong><code>**thickness</code></strong> :&ensp;<code>float</code></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -18153,7 +18639,7 @@ def draw_layer(*, label: str =None, id: int =0, parent: int =0, before: int =0, 
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def draw_rectangle(pmin : List[float], pmax : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, show: bool =True, user_data: Any =None, use_internal_label: bool =True, color: List[int] =(255, 255, 255, 255), fill: List[int] =(0, 0, 0, -255), rounding: float =0.0, thickness: float =1.0) -&gt; int:
+<pre><code class="python">def draw_rectangle(pmin : List[float], pmax : List[float], *, label: str =None, id: int =0, parent: int =0, before: int =0, show: bool =True, user_data: Any =None, use_internal_label: bool =True, color: List[int] =(255, 255, 255, 255), color_upper_left: List[int] =(255, 255, 255, 255), color_upper_right: List[int] =(255, 255, 255, 255), color_bottom_right: List[int] =(255, 255, 255, 255), color_bottom_left: List[int] =(255, 255, 255, 255), fill: List[int] =(0, 0, 0, -255), multicolor: bool =False, rounding: float =0.0, thickness: float =1.0) -&gt; int:
         &#34;&#34;&#34;
         Draws a rectangle on a drawing.
         Args:
@@ -18167,14 +18653,19 @@ def draw_layer(*, label: str =None, id: int =0, parent: int =0, before: int =0, 
                 **user_data (Any): User data for callbacks.
                 **use_internal_label (bool): Use generated internal label instead of user specified (appends ### uuid).
                 **color (List[int]): 
+                **color_upper_left (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
+                **color_upper_right (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
+                **color_bottom_right (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
+                **color_bottom_left (List[int]): &#39;multicolor&#39; must be set to &#39;True&#39;
                 **fill (List[int]): 
-                **rounding (float): Number of pixels of the radius that will round the corners of the rectangle.
+                **multicolor (bool): 
+                **rounding (float): Number of pixels of the radius that will round the corners of the rectangle. Note: doesn&#39;t work with multicolor
                 **thickness (float): 
         Returns:
                 int
         &#34;&#34;&#34;
 
-        return internal_dpg.draw_rectangle(pmin, pmax, label=label, id=id, parent=parent, before=before, show=show, user_data=user_data, use_internal_label=use_internal_label, color=color, fill=fill, rounding=rounding, thickness=thickness)</code></pre>
+        return internal_dpg.draw_rectangle(pmin, pmax, label=label, id=id, parent=parent, before=before, show=show, user_data=user_data, use_internal_label=use_internal_label, color=color, color_upper_left=color_upper_left, color_upper_right=color_upper_right, color_bottom_right=color_bottom_right, color_bottom_left=color_bottom_left, fill=fill, multicolor=multicolor, rounding=rounding, thickness=thickness)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.draw_text"><code class="name flex">
@@ -18861,6 +19352,37 @@ Args:</p>
         &#34;&#34;&#34;
 
         return internal_dpg.get_axis_limits(axis)</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.get_colormap_color"><code class="name flex">
+<span>def <span class="ident">get_colormap_color</span></span>(<span>colormap: int, index: int) ‑> List[int]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a color from a colormap given an index &gt;= 0 (modulo will be performed). This command can only be ran once the app is started.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>colormap</code></strong> :&ensp;<code>int</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>index</code></strong> :&ensp;<code>int</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List[int]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_colormap_color(colormap : int, index : int) -&gt; List[int]:
+        &#34;&#34;&#34;
+        Returns a color from a colormap given an index &gt;= 0 (modulo will be performed). This command can only be ran once the app is started.
+        Args:
+                colormap (int): 
+                index (int): 
+        Returns:
+                List[int]
+        &#34;&#34;&#34;
+
+        return internal_dpg.get_colormap_color(colormap, index)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.get_dearpygui_version"><code class="name flex">
@@ -22156,6 +22678,37 @@ Args:</p>
         return internal_dpg.reset_pos(item)</code></pre>
 </details>
 </dd>
+<dt id="dearpygui.dearpygui.sample_colormap"><code class="name flex">
+<span>def <span class="ident">sample_colormap</span></span>(<span>colormap: int, t: float) ‑> List[int]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a color from a colormap given t between 0 and 1. This command can only be ran once the app is started.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>colormap</code></strong> :&ensp;<code>int</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>t</code></strong> :&ensp;<code>float</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List[int]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_colormap(colormap : int, t : float) -&gt; List[int]:
+        &#34;&#34;&#34;
+        Returns a color from a colormap given t between 0 and 1. This command can only be ran once the app is started.
+        Args:
+                colormap (int): 
+                t (float): 
+        Returns:
+                List[int]
+        &#34;&#34;&#34;
+
+        return internal_dpg.sample_colormap(colormap, t)</code></pre>
+</details>
+</dd>
 <dt id="dearpygui.dearpygui.save_init_file"><code class="name flex">
 <span>def <span class="ident">save_init_file</span></span>(<span>file: str) ‑> None</span>
 </code></dt>
@@ -22275,6 +22828,37 @@ Args:</p>
         &#34;&#34;&#34;
 
         return internal_dpg.set_axis_ticks(axis, label_pairs)</code></pre>
+</details>
+</dd>
+<dt id="dearpygui.dearpygui.set_colormap"><code class="name flex">
+<span>def <span class="ident">set_colormap</span></span>(<span>item: int, source: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sets the color map for widgets that accept it.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>item</code></strong> :&ensp;<code>int</code></dt>
+<dd>&nbsp;</dd>
+<dt><strong><code>source</code></strong> :&ensp;<code>int</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_colormap(item : int, source : int) -&gt; None:
+        &#34;&#34;&#34;
+        Sets the color map for widgets that accept it.
+        Args:
+                item (int): 
+                source (int): 
+        Returns:
+                None
+        &#34;&#34;&#34;
+
+        return internal_dpg.set_colormap(item, source)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.set_exit_callback"><code class="name flex">
@@ -23462,17 +24046,18 @@ Args:</p>
 <span>def <span class="ident">setup_registries</span></span>(<span>) ‑> None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Adds default registries for fonts, handlers, textures, and values.</p></div>
+<div class="desc"><p>Adds default registries for fonts, handlers, textures, colormaps, and values.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def setup_registries() -&gt; None:
-    &#34;&#34;&#34;Adds default registries for fonts, handlers, textures, and values.&#34;&#34;&#34;
+    &#34;&#34;&#34;Adds default registries for fonts, handlers, textures, colormaps, and values.&#34;&#34;&#34;
     internal_dpg.add_font_registry(id=internal_dpg.mvReservedUUID_0)
     internal_dpg.add_handler_registry(id=internal_dpg.mvReservedUUID_1)
     internal_dpg.add_texture_registry(id=internal_dpg.mvReservedUUID_2)
-    internal_dpg.add_value_registry(id=internal_dpg.mvReservedUUID_3)</code></pre>
+    internal_dpg.add_value_registry(id=internal_dpg.mvReservedUUID_3)
+    internal_dpg.add_colormap_registry(id=internal_dpg.mvReservedUUID_4)</code></pre>
 </details>
 </dd>
 <dt id="dearpygui.dearpygui.setup_viewport"><code class="name flex">
@@ -25114,7 +25699,11 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.add_color_edit" href="#dearpygui.dearpygui.add_color_edit">add_color_edit</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_color_picker" href="#dearpygui.dearpygui.add_color_picker">add_color_picker</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_color_value" href="#dearpygui.dearpygui.add_color_value">add_color_value</a></code></li>
+<li><code><a title="dearpygui.dearpygui.add_colormap" href="#dearpygui.dearpygui.add_colormap">add_colormap</a></code></li>
+<li><code><a title="dearpygui.dearpygui.add_colormap_button" href="#dearpygui.dearpygui.add_colormap_button">add_colormap_button</a></code></li>
+<li><code><a title="dearpygui.dearpygui.add_colormap_registry" href="#dearpygui.dearpygui.add_colormap_registry">add_colormap_registry</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_colormap_scale" href="#dearpygui.dearpygui.add_colormap_scale">add_colormap_scale</a></code></li>
+<li><code><a title="dearpygui.dearpygui.add_colormap_slider" href="#dearpygui.dearpygui.add_colormap_slider">add_colormap_slider</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_combo" href="#dearpygui.dearpygui.add_combo">add_combo</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_date_picker" href="#dearpygui.dearpygui.add_date_picker">add_date_picker</a></code></li>
 <li><code><a title="dearpygui.dearpygui.add_deactivated_after_edit_handler" href="#dearpygui.dearpygui.add_deactivated_after_edit_handler">add_deactivated_after_edit_handler</a></code></li>
@@ -25239,6 +25828,7 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.clear_selected_nodes" href="#dearpygui.dearpygui.clear_selected_nodes">clear_selected_nodes</a></code></li>
 <li><code><a title="dearpygui.dearpygui.clipper" href="#dearpygui.dearpygui.clipper">clipper</a></code></li>
 <li><code><a title="dearpygui.dearpygui.collapsing_header" href="#dearpygui.dearpygui.collapsing_header">collapsing_header</a></code></li>
+<li><code><a title="dearpygui.dearpygui.colormap_registry" href="#dearpygui.dearpygui.colormap_registry">colormap_registry</a></code></li>
 <li><code><a title="dearpygui.dearpygui.configure_item" href="#dearpygui.dearpygui.configure_item">configure_item</a></code></li>
 <li><code><a title="dearpygui.dearpygui.configure_viewport" href="#dearpygui.dearpygui.configure_viewport">configure_viewport</a></code></li>
 <li><code><a title="dearpygui.dearpygui.create_viewport" href="#dearpygui.dearpygui.create_viewport">create_viewport</a></code></li>
@@ -25275,6 +25865,7 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.get_all_items" href="#dearpygui.dearpygui.get_all_items">get_all_items</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_available_content_region" href="#dearpygui.dearpygui.get_available_content_region">get_available_content_region</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_axis_limits" href="#dearpygui.dearpygui.get_axis_limits">get_axis_limits</a></code></li>
+<li><code><a title="dearpygui.dearpygui.get_colormap_color" href="#dearpygui.dearpygui.get_colormap_color">get_colormap_color</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_dearpygui_version" href="#dearpygui.dearpygui.get_dearpygui_version">get_dearpygui_version</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_delta_time" href="#dearpygui.dearpygui.get_delta_time">get_delta_time</a></code></li>
 <li><code><a title="dearpygui.dearpygui.get_drawing_mouse_pos" href="#dearpygui.dearpygui.get_drawing_mouse_pos">get_drawing_mouse_pos</a></code></li>
@@ -25396,10 +25987,12 @@ def window(*, label: str =None, id: int =0, width: int =0, height: int =0, inden
 <li><code><a title="dearpygui.dearpygui.reset_axis_ticks" href="#dearpygui.dearpygui.reset_axis_ticks">reset_axis_ticks</a></code></li>
 <li><code><a title="dearpygui.dearpygui.reset_default_theme" href="#dearpygui.dearpygui.reset_default_theme">reset_default_theme</a></code></li>
 <li><code><a title="dearpygui.dearpygui.reset_pos" href="#dearpygui.dearpygui.reset_pos">reset_pos</a></code></li>
+<li><code><a title="dearpygui.dearpygui.sample_colormap" href="#dearpygui.dearpygui.sample_colormap">sample_colormap</a></code></li>
 <li><code><a title="dearpygui.dearpygui.save_init_file" href="#dearpygui.dearpygui.save_init_file">save_init_file</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_axis_limits" href="#dearpygui.dearpygui.set_axis_limits">set_axis_limits</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_axis_limits_auto" href="#dearpygui.dearpygui.set_axis_limits_auto">set_axis_limits_auto</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_axis_ticks" href="#dearpygui.dearpygui.set_axis_ticks">set_axis_ticks</a></code></li>
+<li><code><a title="dearpygui.dearpygui.set_colormap" href="#dearpygui.dearpygui.set_colormap">set_colormap</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_exit_callback" href="#dearpygui.dearpygui.set_exit_callback">set_exit_callback</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_global_font_scale" href="#dearpygui.dearpygui.set_global_font_scale">set_global_font_scale</a></code></li>
 <li><code><a title="dearpygui.dearpygui.set_init_file" href="#dearpygui.dearpygui.set_init_file">set_init_file</a></code></li>
