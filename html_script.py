@@ -38,6 +38,7 @@ apply_formatting("dearpygui")
 apply_formatting("themes")
 apply_formatting("logger")
 apply_formatting("demo")
+apply_formatting("experimental")
         
 
 # INDEX/HOMEPAGE
